@@ -51,6 +51,30 @@ describe("handleError", () => {
     expect(result.message).toBe("[object Object]");
     expect(result.stack).toBeUndefined();
   });
+
+  it("should extract message from object with message field", () => {
+    const error = { message: "Custom error message", code: 500 };
+    const result = handleError(error);
+
+    expect(result.message).toBe("Custom error message");
+    expect(result.stack).toBeUndefined();
+  });
+
+  it("should handle object with non-string message field", () => {
+    const error = { message: 42, code: 500 };
+    const result = handleError(error);
+
+    expect(result.message).toBe("[object Object]");
+    expect(result.stack).toBeUndefined();
+  });
+
+  it("should handle object with null message field", () => {
+    const error = { message: null, code: 500 };
+    const result = handleError(error);
+
+    expect(result.message).toBe("[object Object]");
+    expect(result.stack).toBeUndefined();
+  });
 });
 
 describe("createErrorResponse", () => {
@@ -316,5 +340,25 @@ describe("createErrorResponse with rate limit", () => {
 
     const response = createErrorResponse(error);
     expect(() => JSON.parse(response.content[0].text)).not.toThrow();
+  });
+
+  it("should show 'Rate limit resets momentarily' when resetInMinutes is 0", () => {
+    const resetTime = Math.floor(Date.now() / 1000) - 10; // 10 seconds ago
+    const error = {
+      code: 429,
+      rateLimitError: true,
+      message: "Rate limit exceeded",
+      rateLimit: {
+        limit: 50,
+        remaining: 0,
+        reset: resetTime,
+      },
+    };
+
+    const response = createErrorResponse(error);
+
+    const parsed = JSON.parse(response.content[0].text);
+    expect(parsed.details.message).toBe("Rate limit resets momentarily");
+    expect(parsed.details.rate_limit.reset_in_minutes).toBe(0);
   });
 });
