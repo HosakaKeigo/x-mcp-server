@@ -39,90 +39,24 @@ describe("registerTools", () => {
     expect(registeredToolNames).toContain("retweet");
   });
 
-  it("should register post_tweet tool with correct parameters", () => {
+  const toolRegistrations = [
+    { name: "post_tweet", description: "Posts a tweet on behalf of the authenticated user." },
+    { name: "get_home_timeline", description: "Retrieves the authenticated user's home timeline." },
+    { name: "get_user_tweets", description: "Retrieves recent tweets for a specific user." },
+    { name: "search_tweets", description: "Searches recent tweets by keyword." },
+    { name: "get_user_info", description: "Retrieves basic profile information for a given user." },
+    { name: "like_tweet", description: "Likes a tweet on behalf of the authenticated user." },
+    { name: "retweet", description: "Retweets a post on behalf of the authenticated user." },
+  ];
+
+  it.each(toolRegistrations)("should register $name tool with correct parameters", ({ name, description }) => {
     registerTools(mockServer, mockTwitterClient);
 
-    const postTweetCall = mockToolFn.mock.calls.find((call) => call[0] === "post_tweet");
-    expect(postTweetCall).toBeDefined();
-    expect(postTweetCall?.[0]).toBe("post_tweet");
-    expect(postTweetCall?.[1]).toBe("Posts a tweet on behalf of the authenticated user.");
-    expect(postTweetCall?.[2]).toBeDefined(); // parameters
-    expect(postTweetCall?.[3]).toBeInstanceOf(Function); // execute function
-  });
-
-  it("should register get_home_timeline tool with correct parameters", () => {
-    registerTools(mockServer, mockTwitterClient);
-
-    const getHomeTimelineCall = mockToolFn.mock.calls.find((call) => call[0] === "get_home_timeline");
-    expect(getHomeTimelineCall).toBeDefined();
-    expect(getHomeTimelineCall?.[0]).toBe("get_home_timeline");
-    expect(getHomeTimelineCall?.[1]).toBe("Retrieves the authenticated user's home timeline.");
-    expect(getHomeTimelineCall?.[2]).toBeDefined();
-    expect(getHomeTimelineCall?.[3]).toBeInstanceOf(Function);
-  });
-
-  it("should register get_user_tweets tool with correct parameters", () => {
-    registerTools(mockServer, mockTwitterClient);
-
-    const getUserTweetsCall = mockToolFn.mock.calls.find((call) => call[0] === "get_user_tweets");
-    expect(getUserTweetsCall).toBeDefined();
-    expect(getUserTweetsCall?.[0]).toBe("get_user_tweets");
-    expect(getUserTweetsCall?.[1]).toBe("Retrieves recent tweets for a specific user.");
-    expect(getUserTweetsCall?.[2]).toBeDefined();
-    expect(getUserTweetsCall?.[3]).toBeInstanceOf(Function);
-  });
-
-  it("should register search_tweets tool with correct parameters", () => {
-    registerTools(mockServer, mockTwitterClient);
-
-    const searchTweetsCall = mockToolFn.mock.calls.find((call) => call[0] === "search_tweets");
-    expect(searchTweetsCall).toBeDefined();
-    expect(searchTweetsCall?.[0]).toBe("search_tweets");
-    expect(searchTweetsCall?.[1]).toBe("Searches recent tweets by keyword.");
-    expect(searchTweetsCall?.[2]).toBeDefined();
-    expect(searchTweetsCall?.[3]).toBeInstanceOf(Function);
-  });
-
-  it("should register get_user_info tool with correct parameters", () => {
-    registerTools(mockServer, mockTwitterClient);
-
-    const getUserInfoCall = mockToolFn.mock.calls.find((call) => call[0] === "get_user_info");
-    expect(getUserInfoCall).toBeDefined();
-    expect(getUserInfoCall?.[0]).toBe("get_user_info");
-    expect(getUserInfoCall?.[1]).toBe("Retrieves basic profile information for a given user.");
-    expect(getUserInfoCall?.[2]).toBeDefined();
-    expect(getUserInfoCall?.[3]).toBeInstanceOf(Function);
-  });
-
-  it("should register like_tweet tool with correct parameters", () => {
-    registerTools(mockServer, mockTwitterClient);
-
-    const likeTweetCall = mockToolFn.mock.calls.find((call) => call[0] === "like_tweet");
-    expect(likeTweetCall).toBeDefined();
-    expect(likeTweetCall?.[0]).toBe("like_tweet");
-    expect(likeTweetCall?.[1]).toBe("Likes a tweet on behalf of the authenticated user.");
-    expect(likeTweetCall?.[2]).toBeDefined();
-    expect(likeTweetCall?.[3]).toBeInstanceOf(Function);
-  });
-
-  it("should register retweet tool with correct parameters", () => {
-    registerTools(mockServer, mockTwitterClient);
-
-    const retweetCall = mockToolFn.mock.calls.find((call) => call[0] === "retweet");
-    expect(retweetCall).toBeDefined();
-    expect(retweetCall?.[0]).toBe("retweet");
-    expect(retweetCall?.[1]).toBe("Retweets a post on behalf of the authenticated user.");
-    expect(retweetCall?.[2]).toBeDefined();
-    expect(retweetCall?.[3]).toBeInstanceOf(Function);
-  });
-
-  it("should bind execute methods to their tool instances", () => {
-    registerTools(mockServer, mockTwitterClient);
-
-    // Each registered execute function should be bound to its tool instance
-    for (const call of mockToolFn.mock.calls) {
-      const executeFn = call[3];
-      expect(executeFn).toBeInstanceOf(Function);
-    }
+    const toolCall = mockToolFn.mock.calls.find((call) => call[0] === name);
+    expect(toolCall).toBeDefined();
+    expect(toolCall?.[0]).toBe(name);
+    expect(toolCall?.[1]).toBe(description);
+    expect(toolCall?.[2]).toBeDefined(); // parameters
+    expect(toolCall?.[3]).toBeInstanceOf(Function); // execute function
   });
 });
