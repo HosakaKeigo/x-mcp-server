@@ -1,0 +1,60 @@
+{
+  "manifest_version": "0.3",
+  "name": "x-mcp-server",
+  "version": "0.1.0",
+  "description": "MCP server for X (formerly Twitter) API integration",
+  "author": {
+    "name": "Hosaka Keigo",
+    "email": "hosaka@piano.or.jp"
+  },
+  "keywords": [
+    "mcp",
+    "twitter",
+    "x",
+    "api"
+  ],
+  "user_config": {
+    "twitter_api_key": {
+      "type": "string",
+      "title": "X API Key",
+      "description": "Your X (Twitter) API Key from the Developer Portal",
+      "sensitive": true,
+      "required": true
+    },
+    "twitter_api_secret": {
+      "type": "string",
+      "title": "X API Secret",
+      "description": "Your X (Twitter) API Secret from the Developer Portal",
+      "sensitive": true,
+      "required": true
+    },
+    "twitter_access_token": {
+      "type": "string",
+      "title": "X Access Token",
+      "description": "Your X (Twitter) Access Token from the Developer Portal",
+      "sensitive": true,
+      "required": true
+    },
+    "twitter_access_token_secret": {
+      "type": "string",
+      "title": "X Access Token Secret",
+      "description": "Your X (Twitter) Access Token Secret from the Developer Portal",
+      "sensitive": true,
+      "required": true
+    }
+  },
+  "server": {
+    "type": "node",
+    "entry_point": "dist/index.js",
+    "mcp_config": {
+      "command": "node",
+      "args": ["${__dirname}/dist/index.js"],
+      "env": {
+        "TWITTER_API_KEY": "${user_config.twitter_api_key}",
+        "TWITTER_API_SECRET": "${user_config.twitter_api_secret}",
+        "TWITTER_ACCESS_TOKEN": "${user_config.twitter_access_token}",
+        "TWITTER_ACCESS_TOKEN_SECRET": "${user_config.twitter_access_token_secret}"
+      }
+    }
+  }
+}
