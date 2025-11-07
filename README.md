@@ -1,51 +1,63 @@
 # X (Twitter) MCP Server
 
-X (旧Twitter) APIを利用するためのModel Context Protocol (MCP) サーバーです。Claude DesktopなどのMCPクライアントから、ツイートの投稿、検索、タイムライン取得などの操作を行えます。
+This is a Model Context Protocol (MCP) server for the X (formerly Twitter) API. From an MCP client such as Claude Desktop you can post tweets, read timelines, search posts, and more.
 
-## 機能
+## Features
 
-このMCPサーバーは以下のツールを提供します：
+This MCP server exposes the following tools:
 
-- **post_tweet**: ツイート（ポスト）を投稿
-- **get_home_timeline**: ホームタイムラインを取得
-- **get_user_tweets**: 指定したユーザーの最新ツイートを取得
-- **search_tweets**: キーワードでツイートを検索
-- **get_user_info**: 指定したユーザーの情報を取得
-- **like_tweet**: ツイートにいいね
-- **retweet**: ツイートをリツイート
+- **post_tweet**: Post (publish) a tweet
+- **get_home_timeline**: Fetch the authenticated user's home timeline
+- **get_user_tweets**: Fetch the latest tweets for a specific user
+- **search_tweets**: Search tweets by keyword
+- **get_user_info**: Fetch information for a specific user
+- **like_tweet**: Like a tweet
+- **retweet**: Retweet a tweet
 
-## セットアップ
+| Tool | Description | Key rate limits (Pro / Basic / Free) |
+| --- | --- | --- |
+| `post_tweet` | Create a new tweet with arbitrary text | Pro: 100 req/15 min (per user) · 10,000 req/24 h (per app)<br>Basic: 100 req/24 h (per user) · 1,667 req/24 h (per app)<br>Free: 17 req/24 h (per user/app) |
+| `get_home_timeline` | Retrieve a configurable number of posts from the authenticated home timeline | Pro: 180 req/15 min (per user)<br>Basic: 5 req/15 min (per user)<br>Free: 1 req/15 min (per user) |
+| `get_user_tweets` | Retrieve the latest tweets for a given username (without @) | Pro: 900 req/15 min (per user) · 1,500 req/15 min (per app)<br>Basic: 5 req/15 min (per user) · 10 req/15 min (per app)<br>Free: 1 req/15 min (per user/app) |
+| `search_tweets` | Search recent tweets by keyword | Pro: 300 req/15 min (per user) · 450 req/15 min (per app)<br>Basic: 60 req/15 min (per user/app)<br>Free: 1 req/15 min (per user/app) |
+| `get_user_info` | Fetch profile information for a given username | Pro: 900 req/15 min (per user) · 300 req/15 min (per app)<br>Basic: 100 req/24 h (per user) · 500 req/24 h (per app)<br>Free: 3 req/15 min (per user/app) |
+| `like_tweet` | Like a tweet by ID | Pro: 1,000 req/24 h (per user)<br>Basic: 200 req/24 h (per user)<br>Free: 1 req/15 min (per user) |
+| `retweet` | Retweet a tweet by ID | Pro: 50 req/15 min (per user)<br>Basic: 5 req/15 min (per user)<br>Free: 1 req/15 min (per user) |
 
-### 1. 前提条件
+※ Rate limits reference [docs.x.com/x-api/fundamentals/rate-limits](https://docs.x.com/x-api/fundamentals/rate-limits) (retrieved on 7 Nov 2025) and may change as plans or API behavior evolve.
 
-- Node.js 18.0.0以上
-- X (Twitter) Developer アカウントとAPIキー
+## Setup
 
-### 2. X Developer Portal でAPIキーを取得
+### 1. Requirements
 
-1. [X Developer Portal](https://developer.x.com/en/portal/dashboard) にアクセス
-2. アプリを作成または既存のアプリを選択
-3. 以下の認証情報を取得：
+- Node.js 18.0.0 or newer
+- X (Twitter) Developer account with API keys
+
+### 2. Obtain API keys from the X Developer Portal
+
+1. Visit the [X Developer Portal](https://developer.x.com/en/portal/dashboard)
+2. Create a new app or select an existing one
+3. Collect the following credentials:
    - API Key (Consumer Key)
    - API Secret (Consumer Secret)
    - Access Token
    - Access Token Secret
 
-### 3. 依存パッケージのインストール
+### 3. Install dependencies
 
 ```bash
 npm install
 ```
 
-### 4. 環境変数の設定
+### 4. Configure environment variables
 
-`.env.example`をコピーして`.env`ファイルを作成し、取得したAPIキーを設定します：
+Copy `.env.example` to `.env` and fill in your keys:
 
 ```bash
 cp .env.example .env
 ```
 
-`.env`ファイルを編集：
+Edit `.env`:
 
 ```env
 TWITTER_API_KEY=your_api_key_here
@@ -54,15 +66,15 @@ TWITTER_ACCESS_TOKEN=your_access_token_here
 TWITTER_ACCESS_TOKEN_SECRET=your_access_token_secret_here
 ```
 
-### 5. ビルド
+### 5. Build
 
 ```bash
 npm run build
 ```
 
-## Claude Desktopでの使用方法
+## Using with Claude Desktop
 
-### 1. Claude Desktop設定ファイルを開く
+### 1. Open the Claude Desktop config file
 
 **macOS:**
 ```
@@ -74,9 +86,9 @@ npm run build
 %APPDATA%\Claude\claude_desktop_config.json
 ```
 
-### 2. 設定を追加
+### 2. Add the MCP server entry
 
-設定ファイルに以下を追加します（パスは適宜変更してください）：
+Append the following configuration (adjust paths as needed):
 
 **macOS/Linux:**
 ```json
@@ -114,84 +126,84 @@ npm run build
 }
 ```
 
-### 3. Claude Desktopを再起動
+### 3. Restart Claude Desktop
 
-設定を反映させるため、Claude Desktopを完全に再起動します。
+Restart Claude Desktop completely so the settings take effect.
 
 **macOS:**
-- Claude メニュー → "Quit Claude" を選択
-- Claude Desktopを再度起動
+- Choose "Quit Claude" from the menu
+- Launch Claude Desktop again
 
 **Windows:**
-- タスクマネージャーでClaude Desktopのプロセスを完全に終了
-- Claude Desktopを再度起動
+- Terminate Claude Desktop from Task Manager
+- Launch Claude Desktop again
 
-### 4. 動作確認
+### 4. Verify the connection
 
-Claude Desktopを起動後、入力欄の左下にツールアイコン（🔨）が表示されているか確認してください。
+After restarting, confirm that the tool icon (🔨) shows up in the bottom-left corner of the Claude input box.
 
-## 使用例
+## Usage examples
 
-Claude Desktopで以下のように話しかけてみてください：
+Ask Claude Desktop things like:
 
 ```
-「最新のホームタイムラインを10件取得して」
+"Fetch the latest 10 posts from my home timeline."
 
-「"AI技術"で検索して最新のツイートを5件表示して」
+"Search for the latest 5 tweets about 'AI technology'."
 
-「@example_userの最新ツイートを取得して」
+"Get the latest tweets from @example_user."
 
-「@example_userのプロフィール情報を教えて」
+"Show me the profile for @example_user."
 
-「こんにちは、MCPサーバーのテストです！」というツイートを投稿して
+"Post the tweet 'Hello, this is an MCP server test!'"
 ```
 
-## トラブルシューティング
+## Troubleshooting
 
-### サーバーが認識されない場合
+### Claude Desktop does not detect the server
 
-1. Claude Desktopを完全に再起動
-2. `claude_desktop_config.json`の構文エラーを確認
-3. パスが正しいか確認（絶対パスを使用）
-4. ログを確認：
+1. Fully restart Claude Desktop
+2. Double-check for syntax errors in `claude_desktop_config.json`
+3. Ensure the path to `dist/index.js` is correct (use absolute paths)
+4. Check the logs:
    - **macOS:** `~/Library/Logs/Claude/mcp*.log`
    - **Windows:** `%APPDATA%\Claude\logs\mcp*.log`
 
-### APIエラーが発生する場合
+### API errors occur
 
-1. 環境変数が正しく設定されているか確認
-2. X Developer Portalでアプリの権限を確認（Read and Write権限が必要）
-3. APIキーが有効か確認
+1. Confirm that environment variables are set correctly
+2. Verify that your X app has the required permissions (Read and Write)
+3. Ensure the API keys are still valid
 
-### 手動でサーバーをテストする
+### Test the server manually
 
 ```bash
-# 開発モードで実行
+# Run in development mode
 npm run dev
 
-# または、ビルド後に実行
+# Or run the built output
 npm run build
 node dist/index.js
 ```
 
-## 開発
+## Development
 
-### ウォッチモードでの開発
+### Watch mode
 
 ```bash
 npm run watch
 ```
 
-別のターミナルで：
+In another terminal:
 
 ```bash
 npm run dev
 ```
 
-## ライセンス
+## License
 
 MIT
 
-## 作者
+## Author
 
 Hosaka Keigo <hosaka@piano.or.jp>
