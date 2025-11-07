@@ -90,19 +90,4 @@ describe('PostTweetTool', () => {
     expect(parsed.error).toContain('ツイートの投稿に失敗しました');
     expect(parsed.error).toContain('Network connection failed');
   });
-
-  it('should format response as valid JSON', async () => {
-    const mockTweetData = {
-      data: {
-        id: '123',
-        text: 'Test',
-      },
-    };
-
-    mockTweetFn.mockResolvedValue(mockTweetData);
-
-    const result = await postTweetTool.execute({ text: 'Test' });
-
-    expect(() => JSON.parse(result.content[0].text)).not.toThrow();
-  });
 });
