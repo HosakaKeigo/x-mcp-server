@@ -1,7 +1,8 @@
 import type { TextContent } from "@modelcontextprotocol/sdk/types.js";
 
 /**
- * Rate limit情報の型定義
+ * Normalized representation of the rate-limit metadata returned by the
+ * twitter-api-v2 client.
  */
 export interface RateLimitInfo {
   limit: number;
@@ -12,7 +13,8 @@ export interface RateLimitInfo {
 }
 
 /**
- * Twitter APIのエラーかどうかを判定
+ * Type guard that checks whether the thrown error matches the shape provided
+ * by twitter-api-v2.
  */
 function isTwitterApiError(error: unknown): error is {
   code: number;
@@ -33,21 +35,21 @@ function isTwitterApiError(error: unknown): error is {
 }
 
 /**
- * Rate limitエラーかどうかを判定
- * @param error エラーオブジェクト
- * @returns rate limitエラーの場合はtrue
+ * Determines whether the provided error represents a rate-limit violation.
+ * @param error - Unknown error thrown during a Twitter API call.
+ * @returns True if the error signals a rate-limit issue (429 or explicit flag).
  */
 export function isRateLimitError(error: unknown): boolean {
   if (!isTwitterApiError(error)) {
     return false;
   }
 
-  // ApiResponseError.rateLimitErrorプロパティをチェック
+  // Check the ApiResponseError.rateLimitError helper added by twitter-api-v2.
   if ("rateLimitError" in error && error.rateLimitError === true) {
     return true;
   }
 
-  // HTTPステータスコード429をチェック
+  // Fallback to plain HTTP status code comparison.
   if (error.code === 429) {
     return true;
   }
@@ -56,9 +58,9 @@ export function isRateLimitError(error: unknown): boolean {
 }
 
 /**
- * Rate limit情報を抽出
- * @param error エラーオブジェクト
- * @returns rate limit情報（存在しない場合はundefined）
+ * Extracts rate-limit details from a twitter-api-v2 error, if present.
+ * @param error - Unknown error thrown during a Twitter API call.
+ * @returns Parsed rate-limit metadata or undefined when unavailable.
  */
 export function extractRateLimitInfo(error: unknown): RateLimitInfo | undefined {
   if (!isTwitterApiError(error) || !error.rateLimit) {
@@ -80,9 +82,10 @@ export function extractRateLimitInfo(error: unknown): RateLimitInfo | undefined 
 }
 
 /**
- * エラーをハンドリングして標準化されたメッセージを返す
- * @param error エラーオブジェクト
- * @returns エラーメッセージとスタックトレース
+ * Converts unknown errors into a normalized message/stack pair so that MCP
+ * responses remain predictable.
+ * @param error - Any thrown error value.
+ * @returns Plain object describing the message and optional stack trace.
  */
 export function handleError(error: unknown): {
   message: string;
@@ -95,7 +98,7 @@ export function handleError(error: unknown): {
     };
   }
 
-  // オブジェクトの場合、messageプロパティがあればそれを使う
+  // Prefer a message field when the thrown value is an arbitrary object.
   if (typeof error === "object" && error !== null && "message" in error) {
     const errorObj = error as { message: unknown };
     if (typeof errorObj.message === "string") {
@@ -111,10 +114,11 @@ export function handleError(error: unknown): {
 }
 
 /**
- * Rate limit専用のエラーレスポンスを作成する
- * @param error エラーオブジェクト
- * @param customMessage カスタムエラーメッセージ
- * @returns MCPエラーレスポンス
+ * Builds a structured MCP error response for rate-limit violations so the
+ * client can display actionable metadata.
+ * @param error - Original twitter-api-v2 error value.
+ * @param customMessage - Optional user-friendly override message.
+ * @returns Serialized MCP error payload with rate-limit details embedded.
  */
 function createRateLimitErrorResponse(
   error: unknown,
@@ -160,11 +164,11 @@ function createRateLimitErrorResponse(
 }
 
 /**
- * エラーレスポンスを作成する
- * Rate limitエラーの場合は専用のレスポンスを返す
- * @param error エラーオブジェクト
- * @param customMessage カスタムエラーメッセージ
- * @returns MCPエラーレスポンス
+ * Creates a standardized MCP error response, delegating to the specialized
+ * rate-limit handler when appropriate.
+ * @param error - Unknown error captured in a tool.
+ * @param customMessage - Optional prefix that gives more task-specific context.
+ * @returns Serialized MCP error payload consumable by MCP clients.
  */
 export function createErrorResponse(
   error: unknown,
@@ -173,12 +177,10 @@ export function createErrorResponse(
   content: TextContent[];
   isError: boolean;
 } {
-  // Rate limitエラーの場合は専用のレスポンスを返す
   if (isRateLimitError(error)) {
     return createRateLimitErrorResponse(error, customMessage);
   }
 
-  // 通常のエラーレスポンス
   const { message, stack } = handleError(error);
   const errorMessage = customMessage ? `${customMessage}: ${message}` : message;
 

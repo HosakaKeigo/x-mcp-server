@@ -5,36 +5,27 @@ import type { IMCPTool, InferZodParams } from "../types/index.js";
 import { createErrorResponse } from "../utils/error-handler.js";
 
 /**
- * ユーザー情報取得ツール
+ * MCP tool that fetches public profile information for a specified username.
  */
 export class GetUserInfoTool implements IMCPTool {
-  /**
-   * ツール名
-   */
   readonly name = "get_user_info";
 
-  /**
-   * ツールの説明
-   */
   readonly description = "指定したユーザーの情報を取得します";
 
-  /**
-   * パラメータ定義
-   */
+  /** Parameter schema containing the username to resolve. */
   readonly parameters = {
     username: z.string().describe("ユーザー名（@なし）"),
   } as const;
 
   /**
-   * コンストラクタ
-   * @param client Twitter APIクライアント
+   * @param client - Authenticated Twitter API client with read/write scope.
    */
   constructor(private client: TwitterApi) {}
 
   /**
-   * ツールを実行
-   * @param args パラメータ
-   * @returns 実行結果
+   * Retrieves the user's profile fields and returns them to the MCP client.
+   * @param args - Validated arguments containing the username.
+   * @returns MCP response content with the user payload or an error message.
    */
   async execute(args: InferZodParams<typeof this.parameters>): Promise<{
     content: TextContent[];

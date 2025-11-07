@@ -5,37 +5,29 @@ import type { IMCPTool, InferZodParams } from "../types/index.js";
 import { createErrorResponse } from "../utils/error-handler.js";
 
 /**
- * ツイート検索ツール
+ * MCP tool that searches recent tweets using the standard v2 search endpoint.
  */
 export class SearchTweetsTool implements IMCPTool {
-  /**
-   * ツール名
-   */
   readonly name = "search_tweets";
 
-  /**
-   * ツールの説明
-   */
   readonly description = "キーワードでツイートを検索します";
 
-  /**
-   * パラメータ定義
-   */
+  /** Parameter schema containing the search query and optional result count. */
   readonly parameters = {
     query: z.string().describe("検索クエリ"),
     count: z.number().optional().describe("取得するツイート数（デフォルト: 10, 最大: 100）"),
   } as const;
 
   /**
-   * コンストラクタ
-   * @param client Twitter APIクライアント
+   * @param client - Authenticated Twitter API client with read/write scope.
    */
   constructor(private client: TwitterApi) {}
 
   /**
-   * ツールを実行
-   * @param args パラメータ
-   * @returns 実行結果
+   * Executes the recent search endpoint and returns normalized tweet data to
+   * the MCP client.
+   * @param args - Validated arguments that include the search query.
+   * @returns MCP response payload describing the search results or an error.
    */
   async execute(args: InferZodParams<typeof this.parameters>): Promise<{
     content: TextContent[];

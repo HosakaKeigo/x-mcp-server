@@ -10,13 +10,12 @@ import { RetweetTool } from "./retweet.js";
 import { SearchTweetsTool } from "./search-tweets.js";
 
 /**
- * ツール登録関数
- * すべてのツールをサーバーに登録
- * @param server MCPサーバーインスタンス
- * @param twitterClient Twitter APIクライアント
+ * Registers every MCP tool with the given server instance so the client can
+ * discover and invoke them over the protocol.
+ * @param server - Active MCP server
+ * @param twitterClient - Authenticated Twitter API client injected into tools
  */
 export function registerTools(server: McpServer, twitterClient: TwitterApi): void {
-  // すべてのツールを初期化
   const ALL_TOOLS: IMCPTool[] = [
     new PostTweetTool(twitterClient),
     new GetHomeTimelineTool(twitterClient),
@@ -27,7 +26,6 @@ export function registerTools(server: McpServer, twitterClient: TwitterApi): voi
     new RetweetTool(twitterClient),
   ];
 
-  // 各ツールをサーバーに登録
   for (const tool of ALL_TOOLS) {
     server.tool(tool.name, tool.description, tool.parameters, tool.execute.bind(tool));
   }

@@ -297,7 +297,7 @@ describe("createErrorResponse with rate limit", () => {
     const response = createErrorResponse(error);
 
     const parsed = JSON.parse(response.content[0].text);
-    // 30秒なので1分未満で、切り上げで1になるか0になるか
+    // 30 seconds is below one minute, so the rounded value may be either 0 or 1.
     expect(parsed.details.message).toBeDefined();
   });
 

@@ -6,14 +6,14 @@ import { TwitterApi } from "twitter-api-v2";
 import { registerTools } from "./tools/index.js";
 
 /**
- * X (Twitter) MCP Server のメインクラス
+ * Bootstraps the X (Twitter) MCP server, registers all tools, and connects it
+ * to the MCP stdio transport expected by Claude Desktop and other clients.
  */
 async function main() {
   const SERVER_NAME = "x-mcp-server";
   const SERVER_VERSION = "0.1.0";
 
   try {
-    // 環境変数からTwitter API認証情報を取得
     const twitterClient = new TwitterApi({
       appKey: process.env.X_API_KEY || "",
       appSecret: process.env.X_API_SECRET || "",
@@ -21,7 +21,6 @@ async function main() {
       accessSecret: process.env.X_ACCESS_TOKEN_SECRET || "",
     });
 
-    // MCPサーバーのインスタンスを作成
     const server = new McpServer({
       name: SERVER_NAME,
       version: SERVER_VERSION,
@@ -30,10 +29,8 @@ async function main() {
       },
     });
 
-    // ツールを登録
     registerTools(server, twitterClient);
 
-    // Stdio transportを初期化して接続
     const transport = new StdioServerTransport();
     console.error(`${SERVER_NAME} v${SERVER_VERSION} starting...`);
     await server.connect(transport);

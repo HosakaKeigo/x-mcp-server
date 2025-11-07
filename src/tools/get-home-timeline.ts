@@ -5,36 +5,28 @@ import type { IMCPTool, InferZodParams } from "../types/index.js";
 import { createErrorResponse } from "../utils/error-handler.js";
 
 /**
- * ホームタイムライン取得ツール
+ * MCP tool that retrieves the authenticated user's home timeline.
  */
 export class GetHomeTimelineTool implements IMCPTool {
-  /**
-   * ツール名
-   */
   readonly name = "get_home_timeline";
 
-  /**
-   * ツールの説明
-   */
   readonly description = "ホームタイムラインを取得します";
 
-  /**
-   * パラメータ定義
-   */
+  /** Parameter schema controlling how many tweets are returned. */
   readonly parameters = {
     count: z.number().optional().describe("取得するツイート数（デフォルト: 10, 最大: 100）"),
   } as const;
 
   /**
-   * コンストラクタ
-   * @param client Twitter APIクライアント
+   * @param client - Authenticated Twitter API client with read/write scope.
    */
   constructor(private client: TwitterApi) {}
 
   /**
-   * ツールを実行
-   * @param args パラメータ
-   * @returns 実行結果
+   * Fetches the home timeline via twitter-api-v2 and returns a summarized list
+   * of tweets. Rate-limit or API errors are converted into MCP error payloads.
+   * @param args - Validated arguments supplied by the MCP client.
+   * @returns MCP response content describing the timeline or an error payload.
    */
   async execute(args: InferZodParams<typeof this.parameters>): Promise<{
     content: TextContent[];

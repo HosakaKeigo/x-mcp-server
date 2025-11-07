@@ -5,36 +5,28 @@ import type { IMCPTool, InferZodParams } from "../types/index.js";
 import { createErrorResponse } from "../utils/error-handler.js";
 
 /**
- * ツイートいいねツール
+ * MCP tool that likes a specified tweet on behalf of the authenticated user.
  */
 export class LikeTweetTool implements IMCPTool {
-  /**
-   * ツール名
-   */
   readonly name = "like_tweet";
 
-  /**
-   * ツールの説明
-   */
   readonly description = "ツイートにいいねをします";
 
-  /**
-   * パラメータ定義
-   */
+  /** Parameter schema containing the tweet ID to like. */
   readonly parameters = {
     tweet_id: z.string().describe("いいねするツイートのID"),
   } as const;
 
   /**
-   * コンストラクタ
-   * @param client Twitter APIクライアント
+   * @param client - Authenticated Twitter API client with read/write scope.
    */
   constructor(private client: TwitterApi) {}
 
   /**
-   * ツールを実行
-   * @param args パラメータ
-   * @returns 実行結果
+   * Likes the requested tweet and returns a confirmation payload. Errors are
+   * routed through createErrorResponse for consistent MCP responses.
+   * @param args - Validated arguments including the tweet ID.
+   * @returns MCP response indicating success or failure.
    */
   async execute(args: InferZodParams<typeof this.parameters>): Promise<{
     content: TextContent[];

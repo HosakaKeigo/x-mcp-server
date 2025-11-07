@@ -5,36 +5,28 @@ import type { IMCPTool, InferZodParams } from "../types/index.js";
 import { createErrorResponse } from "../utils/error-handler.js";
 
 /**
- * リツイートツール
+ * MCP tool that retweets a specified post on behalf of the authenticated user.
  */
 export class RetweetTool implements IMCPTool {
-  /**
-   * ツール名
-   */
   readonly name = "retweet";
 
-  /**
-   * ツールの説明
-   */
   readonly description = "ツイートをリツイートします";
 
-  /**
-   * パラメータ定義
-   */
+  /** Parameter schema containing the tweet ID to retweet. */
   readonly parameters = {
     tweet_id: z.string().describe("リツイートするツイートのID"),
   } as const;
 
   /**
-   * コンストラクタ
-   * @param client Twitter APIクライアント
+   * @param client - Authenticated Twitter API client with read/write scope.
    */
   constructor(private client: TwitterApi) {}
 
   /**
-   * ツールを実行
-   * @param args パラメータ
-   * @returns 実行結果
+   * Retweets the given post and returns a confirmation payload. Failures are
+   * normalized through createErrorResponse for the MCP client.
+   * @param args - Validated arguments including the tweet ID.
+   * @returns MCP response describing the retweet result or an error payload.
    */
   async execute(args: InferZodParams<typeof this.parameters>): Promise<{
     content: TextContent[];

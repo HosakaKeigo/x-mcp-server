@@ -2,35 +2,31 @@ import type { TextContent } from "@modelcontextprotocol/sdk/types.js";
 import type { z } from "zod";
 
 /**
- * Zodスキーマから型を抽出するユーティリティ型
+ * Utility helper that turns a dictionary of Zod schemas into the corresponding
+ * TypeScript argument object shape.
  */
 export type InferZodParams<T extends Record<string, z.ZodType>> = {
   [K in keyof T]: z.infer<T[K]>;
 };
 
 /**
- * MCPツールのインターフェース
+ * Common contract every MCP tool must follow so it can be registered on an
+ * MCP server and invoked by clients.
  */
 export interface IMCPTool<TParams extends Record<string, z.ZodType> = Record<string, z.ZodType>> {
-  /**
-   * ツール名
-   */
+  /** Unique identifier exposed to MCP clients (e.g., `post_tweet`). */
   readonly name: string;
 
-  /**
-   * ツールの説明
-   */
+  /** Human-readable summary that clients display in tool pickers. */
   readonly description: string;
 
-  /**
-   * パラメータの定義
-   */
+  /** Zod schema describing the arguments accepted by the tool. */
   readonly parameters: TParams;
 
   /**
-   * ツールを実行する
-   * @param args パラメータ
-   * @returns 実行結果
+   * Executes the tool logic using validated arguments from the MCP request.
+   * @param args - Arguments validated by the Zod schema declared above.
+   * @returns MCP-friendly content payload (optionally marked as an error).
    */
   execute(args: InferZodParams<TParams>): Promise<{
     content: TextContent[];
@@ -39,22 +35,17 @@ export interface IMCPTool<TParams extends Record<string, z.ZodType> = Record<str
 }
 
 /**
- * MCPリソースのインターフェース
+ * Interface for MCP resources that can return arbitrary content when a client
+ * dereferences their URI.
  */
 export interface IMCPResource {
-  /**
-   * リソース名
-   */
+  /** Unique resource name announced to the MCP client. */
   readonly name: string;
 
-  /**
-   * リソースURI
-   */
+  /** Fully-qualified URI that the client can request. */
   readonly uri: string;
 
-  /**
-   * リソースハンドラ
-   */
+  /** Handler that resolves content for a given URI. */
   handler(uri: URL): Promise<{
     contents: {
       uri: string;
@@ -66,22 +57,17 @@ export interface IMCPResource {
 }
 
 /**
- * MCPプロンプトのインターフェース
+ * Interface for custom MCP prompts that can synthesize seed messages based on
+ * typed arguments.
  */
 export interface IMCPPrompt<TParams extends Record<string, z.ZodType> = Record<string, z.ZodType>> {
-  /**
-   * プロンプト名
-   */
+  /** Unique prompt identifier. */
   readonly name: string;
 
-  /**
-   * パラメータスキーマ
-   */
+  /** Argument schema used to validate prompt inputs. */
   readonly schema: TParams;
 
-  /**
-   * プロンプトハンドラ
-   */
+  /** Resolver that returns the messages the client should inject. */
   handler(args: InferZodParams<TParams>): {
     messages: {
       role: "user" | "assistant";
