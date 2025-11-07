@@ -29,7 +29,7 @@
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.21.0",
     "twitter-api-v2": "^1.27.0",
-    "zod": "^4.1.12"
+    "zod": "^3"
   },
   "engines": {
     "node": ">=18.0.0"
