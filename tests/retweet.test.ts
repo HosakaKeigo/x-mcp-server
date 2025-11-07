@@ -72,6 +72,8 @@ describe('RetweetTool', () => {
 
     const result = await retweetTool.execute({ tweet_id: '1234567890' });
 
+    expect(mockMeFn).toHaveBeenCalledTimes(1);
+    expect(mockRetweetFn).not.toHaveBeenCalled();
     expect(result.isError).toBe(true);
     expect(result.content).toHaveLength(1);
     expect(result.content[0].type).toBe('text');
@@ -97,6 +99,8 @@ describe('RetweetTool', () => {
 
     const result = await retweetTool.execute({ tweet_id: '1234567890' });
 
+    expect(mockMeFn).toHaveBeenCalledTimes(1);
+    expect(mockRetweetFn).toHaveBeenCalledWith('123456', '1234567890');
     expect(result.isError).toBe(true);
     expect(result.content).toHaveLength(1);
     expect(result.content[0].type).toBe('text');
@@ -112,6 +116,8 @@ describe('RetweetTool', () => {
 
     const result = await retweetTool.execute({ tweet_id: '1234567890' });
 
+    expect(mockMeFn).toHaveBeenCalledTimes(1);
+    expect(mockRetweetFn).not.toHaveBeenCalled();
     expect(result.isError).toBe(true);
 
     const parsed = JSON.parse(result.content[0].text);
