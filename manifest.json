@@ -1,5 +1,5 @@
 {
-  "mcpb_version": "0.1",
+  "manifest_version": "0.3",
   "name": "x-mcp-server",
   "version": "0.1.0",
   "description": "MCP server for X (formerly Twitter) API integration",
@@ -18,28 +18,28 @@
       "type": "string",
       "title": "X API Key",
       "description": "Your X (Twitter) API Key from the Developer Portal",
-      "secret": true,
+      "sensitive": true,
       "required": true
     },
     "twitter_api_secret": {
       "type": "string",
       "title": "X API Secret",
       "description": "Your X (Twitter) API Secret from the Developer Portal",
-      "secret": true,
+      "sensitive": true,
       "required": true
     },
     "twitter_access_token": {
       "type": "string",
       "title": "X Access Token",
       "description": "Your X (Twitter) Access Token from the Developer Portal",
-      "secret": true,
+      "sensitive": true,
       "required": true
     },
     "twitter_access_token_secret": {
       "type": "string",
       "title": "X Access Token Secret",
       "description": "Your X (Twitter) Access Token Secret from the Developer Portal",
-      "secret": true,
+      "sensitive": true,
       "required": true
     }
   },
