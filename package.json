@@ -1,0 +1,40 @@
+{
+  "name": "x-mcp-server",
+  "version": "0.1.0",
+  "description": "MCP server for X (formerly Twitter) API integration",
+  "type": "module",
+  "bin": {
+    "x-mcp-server": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "prepare": "pnpm run build",
+    "dev": "tsx src/index.ts",
+    "watch": "tsc --watch",
+    "check": "biome check .",
+    "format": "biome format --write .",
+    "lint": "biome lint ."
+  },
+  "keywords": [
+    "mcp",
+    "twitter",
+    "x",
+    "api"
+  ],
+  "author": "Hosaka Keigo <hosaka@piano.or.jp>",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.21.0",
+    "twitter-api-v2": "^1.27.0",
+    "zod": "^4.1.12"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.3.4",
+    "@types/node": "^24.10.0",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
+  }
+}
