@@ -90,10 +90,10 @@ cp .env.example .env
 `.env`ファイルを編集：
 
 ```env
-TWITTER_API_KEY=your_api_key_here
-TWITTER_API_SECRET=your_api_secret_here
-TWITTER_ACCESS_TOKEN=your_access_token_here
-TWITTER_ACCESS_TOKEN_SECRET=your_access_token_secret_here
+X_API_KEY=your_api_key_here
+X_API_SECRET=your_api_secret_here
+X_ACCESS_TOKEN=your_access_token_here
+X_ACCESS_TOKEN_SECRET=your_access_token_secret_here
 ```
 
 ### 5. ビルド
@@ -128,10 +128,10 @@ pnpm build
       "command": "node",
       "args": ["/Users/username/path/to/x-mcp-server/dist/index.js"],
       "env": {
-        "TWITTER_API_KEY": "your_api_key",
-        "TWITTER_API_SECRET": "your_api_secret",
-        "TWITTER_ACCESS_TOKEN": "your_access_token",
-        "TWITTER_ACCESS_TOKEN_SECRET": "your_access_token_secret"
+        "X_API_KEY": "your_api_key",
+        "X_API_SECRET": "your_api_secret",
+        "X_ACCESS_TOKEN": "your_access_token",
+        "X_ACCESS_TOKEN_SECRET": "your_access_token_secret"
       }
     }
   }
@@ -146,10 +146,10 @@ pnpm build
       "command": "node",
       "args": ["C:\\Users\\username\\path\\to\\x-mcp-server\\dist\\index.js"],
       "env": {
-        "TWITTER_API_KEY": "your_api_key",
-        "TWITTER_API_SECRET": "your_api_secret",
-        "TWITTER_ACCESS_TOKEN": "your_access_token",
-        "TWITTER_ACCESS_TOKEN_SECRET": "your_access_token_secret"
+        "X_API_KEY": "your_api_key",
+        "X_API_SECRET": "your_api_secret",
+        "X_ACCESS_TOKEN": "your_access_token",
+        "X_ACCESS_TOKEN_SECRET": "your_access_token_secret"
       }
     }
   }

@@ -14,28 +14,28 @@
     "api"
   ],
   "user_config": {
-    "twitter_api_key": {
+    "x_api_key": {
       "type": "string",
       "title": "X API Key",
       "description": "Your X (Twitter) API Key from the Developer Portal",
       "sensitive": true,
       "required": true
     },
-    "twitter_api_secret": {
+    "x_api_secret": {
       "type": "string",
       "title": "X API Secret",
       "description": "Your X (Twitter) API Secret from the Developer Portal",
       "sensitive": true,
       "required": true
     },
-    "twitter_access_token": {
+    "x_access_token": {
       "type": "string",
       "title": "X Access Token",
       "description": "Your X (Twitter) Access Token from the Developer Portal",
       "sensitive": true,
       "required": true
     },
-    "twitter_access_token_secret": {
+    "x_access_token_secret": {
       "type": "string",
       "title": "X Access Token Secret",
       "description": "Your X (Twitter) Access Token Secret from the Developer Portal",
@@ -50,10 +50,10 @@
       "command": "node",
       "args": ["${__dirname}/dist/index.js"],
       "env": {
-        "TWITTER_API_KEY": "${user_config.twitter_api_key}",
-        "TWITTER_API_SECRET": "${user_config.twitter_api_secret}",
-        "TWITTER_ACCESS_TOKEN": "${user_config.twitter_access_token}",
-        "TWITTER_ACCESS_TOKEN_SECRET": "${user_config.twitter_access_token_secret}"
+        "X_API_KEY": "${user_config.x_api_key}",
+        "X_API_SECRET": "${user_config.x_api_secret}",
+        "X_ACCESS_TOKEN": "${user_config.x_access_token}",
+        "X_ACCESS_TOKEN_SECRET": "${user_config.x_access_token_secret}"
       }
     }
   }

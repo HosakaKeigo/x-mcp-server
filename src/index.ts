@@ -15,10 +15,10 @@ async function main() {
   try {
     // 環境変数からTwitter API認証情報を取得
     const twitterClient = new TwitterApi({
-      appKey: process.env.TWITTER_API_KEY || "",
-      appSecret: process.env.TWITTER_API_SECRET || "",
-      accessToken: process.env.TWITTER_ACCESS_TOKEN || "",
-      accessSecret: process.env.TWITTER_ACCESS_TOKEN_SECRET || "",
+      appKey: process.env.X_API_KEY || "",
+      appSecret: process.env.X_API_SECRET || "",
+      accessToken: process.env.X_ACCESS_TOKEN || "",
+      accessSecret: process.env.X_ACCESS_TOKEN_SECRET || "",
     });
 
     // MCPサーバーのインスタンスを作成
