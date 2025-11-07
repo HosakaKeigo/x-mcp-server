@@ -28,47 +28,38 @@ describe('PostTweetTool', () => {
     expect(postTweetTool.description).toBe('ツイート（ポスト）を投稿します');
   });
 
-  it('should successfully post a tweet', async () => {
+  it.each([
+    {
+      description: 'simple text',
+      text: 'Hello, World!',
+      tweetId: '1234567890',
+    },
+    {
+      description: 'text with emojis',
+      text: 'Testing with emojis 🚀✨',
+      tweetId: '9876543210',
+    },
+  ])('should successfully post a tweet with $description', async ({ text, tweetId }) => {
     const mockTweetData = {
       data: {
-        id: '1234567890',
-        text: 'Hello, World!',
+        id: tweetId,
+        text,
       },
     };
 
     mockTweetFn.mockResolvedValue(mockTweetData);
 
-    const result = await postTweetTool.execute({ text: 'Hello, World!' });
+    const result = await postTweetTool.execute({ text });
 
-    expect(mockTweetFn).toHaveBeenCalledWith('Hello, World!');
+    expect(mockTweetFn).toHaveBeenCalledWith(text);
     expect(result.isError).toBeUndefined();
     expect(result.content).toHaveLength(1);
     expect(result.content[0].type).toBe('text');
 
     const parsed = JSON.parse(result.content[0].text);
     expect(parsed.success).toBe(true);
-    expect(parsed.tweet_id).toBe('1234567890');
-    expect(parsed.text).toBe('Hello, World!');
-  });
-
-  it('should handle different tweet content', async () => {
-    const mockTweetData = {
-      data: {
-        id: '9876543210',
-        text: 'Testing with emojis 🚀✨',
-      },
-    };
-
-    mockTweetFn.mockResolvedValue(mockTweetData);
-
-    const result = await postTweetTool.execute({ text: 'Testing with emojis 🚀✨' });
-
-    expect(mockTweetFn).toHaveBeenCalledWith('Testing with emojis 🚀✨');
-
-    const parsed = JSON.parse(result.content[0].text);
-    expect(parsed.success).toBe(true);
-    expect(parsed.tweet_id).toBe('9876543210');
-    expect(parsed.text).toBe('Testing with emojis 🚀✨');
+    expect(parsed.tweet_id).toBe(tweetId);
+    expect(parsed.text).toBe(text);
   });
 
   it('should return error response when tweet fails', async () => {
