@@ -2,16 +2,20 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { PostTweetTool } from '../src/tools/post-tweet.js';
 import type { TwitterApi } from 'twitter-api-v2';
 
+const mockTweetFn = vi.hoisted(() => vi.fn());
+
 describe('PostTweetTool', () => {
   let mockClient: TwitterApi;
   let postTweetTool: PostTweetTool;
 
   beforeEach(() => {
+    mockTweetFn.mockClear();
+
     // Create a mock Twitter API client
     mockClient = {
       readWrite: {
         v2: {
-          tweet: vi.fn(),
+          tweet: mockTweetFn,
         },
       },
     } as unknown as TwitterApi;
@@ -32,11 +36,11 @@ describe('PostTweetTool', () => {
       },
     };
 
-    (mockClient.readWrite.v2.tweet as any).mockResolvedValue(mockTweetData);
+    mockTweetFn.mockResolvedValue(mockTweetData);
 
     const result = await postTweetTool.execute({ text: 'Hello, World!' });
 
-    expect(mockClient.readWrite.v2.tweet).toHaveBeenCalledWith('Hello, World!');
+    expect(mockTweetFn).toHaveBeenCalledWith('Hello, World!');
     expect(result.isError).toBeUndefined();
     expect(result.content).toHaveLength(1);
     expect(result.content[0].type).toBe('text');
@@ -55,11 +59,11 @@ describe('PostTweetTool', () => {
       },
     };
 
-    (mockClient.readWrite.v2.tweet as any).mockResolvedValue(mockTweetData);
+    mockTweetFn.mockResolvedValue(mockTweetData);
 
     const result = await postTweetTool.execute({ text: 'Testing with emojis 🚀✨' });
 
-    expect(mockClient.readWrite.v2.tweet).toHaveBeenCalledWith('Testing with emojis 🚀✨');
+    expect(mockTweetFn).toHaveBeenCalledWith('Testing with emojis 🚀✨');
 
     const parsed = JSON.parse(result.content[0].text);
     expect(parsed.success).toBe(true);
@@ -69,7 +73,7 @@ describe('PostTweetTool', () => {
 
   it('should return error response when tweet fails', async () => {
     const error = new Error('API rate limit exceeded');
-    (mockClient.readWrite.v2.tweet as any).mockRejectedValue(error);
+    mockTweetFn.mockRejectedValue(error);
 
     const result = await postTweetTool.execute({ text: 'This will fail' });
 
@@ -84,7 +88,7 @@ describe('PostTweetTool', () => {
   });
 
   it('should handle non-Error exceptions', async () => {
-    (mockClient.readWrite.v2.tweet as any).mockRejectedValue('Network connection failed');
+    mockTweetFn.mockRejectedValue('Network connection failed');
 
     const result = await postTweetTool.execute({ text: 'Test tweet' });
 
@@ -104,7 +108,7 @@ describe('PostTweetTool', () => {
       },
     };
 
-    (mockClient.readWrite.v2.tweet as any).mockResolvedValue(mockTweetData);
+    mockTweetFn.mockResolvedValue(mockTweetData);
 
     const result = await postTweetTool.execute({ text: 'Test' });
 
