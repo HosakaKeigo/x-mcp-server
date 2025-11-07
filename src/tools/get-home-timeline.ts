@@ -10,11 +10,11 @@ import { createErrorResponse } from "../utils/error-handler.js";
 export class GetHomeTimelineTool implements IMCPTool {
   readonly name = "get_home_timeline";
 
-  readonly description = "ホームタイムラインを取得します";
+  readonly description = "Retrieves the authenticated user's home timeline.";
 
   /** Parameter schema controlling how many tweets are returned. */
   readonly parameters = {
-    count: z.number().optional().describe("取得するツイート数（デフォルト: 10, 最大: 100）"),
+    count: z.number().optional().describe("Number of tweets to fetch (default 10, max 100)"),
   } as const;
 
   /**
@@ -61,7 +61,7 @@ export class GetHomeTimelineTool implements IMCPTool {
         ],
       };
     } catch (error) {
-      return createErrorResponse(error, "ホームタイムラインの取得に失敗しました");
+      return createErrorResponse(error, "Failed to fetch home timeline");
     }
   }
 }

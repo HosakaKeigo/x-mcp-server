@@ -10,12 +10,12 @@ import { createErrorResponse } from "../utils/error-handler.js";
 export class SearchTweetsTool implements IMCPTool {
   readonly name = "search_tweets";
 
-  readonly description = "キーワードでツイートを検索します";
+  readonly description = "Searches recent tweets by keyword.";
 
   /** Parameter schema containing the search query and optional result count. */
   readonly parameters = {
-    query: z.string().describe("検索クエリ"),
-    count: z.number().optional().describe("取得するツイート数（デフォルト: 10, 最大: 100）"),
+    query: z.string().describe("Search query"),
+    count: z.number().optional().describe("Number of tweets to fetch (default 10, max 100)"),
   } as const;
 
   /**
@@ -63,7 +63,7 @@ export class SearchTweetsTool implements IMCPTool {
         ],
       };
     } catch (error) {
-      return createErrorResponse(error, "ツイート検索に失敗しました");
+      return createErrorResponse(error, "Failed to search tweets");
     }
   }
 }

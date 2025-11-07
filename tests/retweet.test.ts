@@ -28,7 +28,7 @@ describe("RetweetTool", () => {
 
   it("should have correct name and description", () => {
     expect(retweetTool.name).toBe("retweet");
-    expect(retweetTool.description).toBe("ツイートをリツイートします");
+    expect(retweetTool.description).toBe("Retweets a post on behalf of the authenticated user.");
   });
 
   it.each([
@@ -63,7 +63,7 @@ describe("RetweetTool", () => {
 
     const parsed = JSON.parse(result.content[0].text);
     expect(parsed.success).toBe(true);
-    expect(parsed.message).toBe(`ツイート ${tweetId} をリツイートしました`);
+    expect(parsed.message).toBe(`Retweeted tweet ${tweetId}.`);
   });
 
   it("should return error response when me() API fails", async () => {
@@ -80,7 +80,7 @@ describe("RetweetTool", () => {
 
     const parsed = JSON.parse(result.content[0].text);
     expect(parsed.success).toBe(false);
-    expect(parsed.error).toContain("リツイートに失敗しました");
+    expect(parsed.error).toContain("Failed to retweet");
     expect(parsed.error).toContain("Authentication failed");
   });
 
@@ -107,7 +107,7 @@ describe("RetweetTool", () => {
 
     const parsed = JSON.parse(result.content[0].text);
     expect(parsed.success).toBe(false);
-    expect(parsed.error).toContain("リツイートに失敗しました");
+    expect(parsed.error).toContain("Failed to retweet");
     expect(parsed.error).toContain("API rate limit exceeded");
   });
 
@@ -122,7 +122,7 @@ describe("RetweetTool", () => {
 
     const parsed = JSON.parse(result.content[0].text);
     expect(parsed.success).toBe(false);
-    expect(parsed.error).toContain("リツイートに失敗しました");
+    expect(parsed.error).toContain("Failed to retweet");
     expect(parsed.error).toContain("Network connection failed");
   });
 });

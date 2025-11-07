@@ -10,11 +10,11 @@ import { createErrorResponse } from "../utils/error-handler.js";
 export class GetUserInfoTool implements IMCPTool {
   readonly name = "get_user_info";
 
-  readonly description = "指定したユーザーの情報を取得します";
+  readonly description = "Retrieves basic profile information for a given user.";
 
   /** Parameter schema containing the username to resolve. */
   readonly parameters = {
-    username: z.string().describe("ユーザー名（@なし）"),
+    username: z.string().describe("Username (without @)"),
   } as const;
 
   /**
@@ -39,7 +39,7 @@ export class GetUserInfoTool implements IMCPTool {
       });
 
       if (!user.data) {
-        throw new Error(`ユーザー @${username} が見つかりません`);
+        throw new Error(`User @${username} was not found`);
       }
 
       return {
@@ -67,7 +67,7 @@ export class GetUserInfoTool implements IMCPTool {
         ],
       };
     } catch (error) {
-      return createErrorResponse(error, "ユーザー情報の取得に失敗しました");
+      return createErrorResponse(error, "Failed to fetch user info");
     }
   }
 }

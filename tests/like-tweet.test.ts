@@ -28,7 +28,7 @@ describe("LikeTweetTool", () => {
 
   it("should have correct name and description", () => {
     expect(likeTweetTool.name).toBe("like_tweet");
-    expect(likeTweetTool.description).toBe("ツイートにいいねをします");
+    expect(likeTweetTool.description).toBe("Likes a tweet on behalf of the authenticated user.");
   });
 
   it.each([
@@ -63,7 +63,7 @@ describe("LikeTweetTool", () => {
 
     const parsed = JSON.parse(result.content[0].text);
     expect(parsed.success).toBe(true);
-    expect(parsed.message).toBe(`ツイート ${tweetId} にいいねしました`);
+    expect(parsed.message).toBe(`Liked tweet ${tweetId}.`);
   });
 
   it("should return error response when me() API fails", async () => {
@@ -78,7 +78,7 @@ describe("LikeTweetTool", () => {
 
     const parsed = JSON.parse(result.content[0].text);
     expect(parsed.success).toBe(false);
-    expect(parsed.error).toContain("いいねに失敗しました");
+    expect(parsed.error).toContain("Failed to like tweet");
     expect(parsed.error).toContain("Authentication failed");
   });
 
@@ -103,7 +103,7 @@ describe("LikeTweetTool", () => {
 
     const parsed = JSON.parse(result.content[0].text);
     expect(parsed.success).toBe(false);
-    expect(parsed.error).toContain("いいねに失敗しました");
+    expect(parsed.error).toContain("Failed to like tweet");
     expect(parsed.error).toContain("API rate limit exceeded");
   });
 
@@ -116,7 +116,7 @@ describe("LikeTweetTool", () => {
 
     const parsed = JSON.parse(result.content[0].text);
     expect(parsed.success).toBe(false);
-    expect(parsed.error).toContain("いいねに失敗しました");
+    expect(parsed.error).toContain("Failed to like tweet");
     expect(parsed.error).toContain("Network connection failed");
   });
 });

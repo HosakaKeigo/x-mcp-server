@@ -228,7 +228,7 @@ describe("createErrorResponse with rate limit", () => {
       },
     };
 
-    const response = createErrorResponse(error, "ツイートの投稿に失敗しました");
+    const response = createErrorResponse(error, "Failed to post tweet");
 
     expect(response.isError).toBe(true);
     expect(response.content).toHaveLength(1);
@@ -237,14 +237,14 @@ describe("createErrorResponse with rate limit", () => {
     const parsed = JSON.parse(response.content[0].text);
     expect(parsed.success).toBe(false);
     expect(parsed.error_type).toBe("RATE_LIMIT_EXCEEDED");
-    expect(parsed.error).toBe("ツイートの投稿に失敗しました");
+    expect(parsed.error).toBe("Failed to post tweet");
     expect(parsed.details.original_error).toBe("Rate limit exceeded");
     expect(parsed.details.rate_limit).toBeDefined();
     expect(parsed.details.rate_limit.limit).toBe(50);
     expect(parsed.details.rate_limit.remaining).toBe(0);
     expect(parsed.details.rate_limit.reset_at).toBeDefined();
     expect(parsed.details.rate_limit.reset_in_minutes).toBeGreaterThan(0);
-    expect(parsed.details.message).toContain("分後に再試行してください");
+    expect(parsed.details.message).toContain("Please retry in");
   });
 
   it("should create rate limit error response without custom message", () => {
@@ -263,7 +263,7 @@ describe("createErrorResponse with rate limit", () => {
     const response = createErrorResponse(error);
 
     const parsed = JSON.parse(response.content[0].text);
-    expect(parsed.error).toBe("Twitter APIのレート制限に達しました");
+    expect(parsed.error).toBe("Twitter API rate limit reached");
     expect(parsed.error_type).toBe("RATE_LIMIT_EXCEEDED");
   });
 
@@ -281,7 +281,7 @@ describe("createErrorResponse with rate limit", () => {
     expect(parsed.details.rate_limit).toBeUndefined();
   });
 
-  it("should show 'まもなくリセットされます' when reset time is very close", () => {
+  it("should show short retry hint when reset time is very close", () => {
     const resetTime = Math.floor(Date.now() / 1000) + 30; // 30 seconds from now
     const error = {
       code: 429,

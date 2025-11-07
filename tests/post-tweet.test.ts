@@ -25,7 +25,7 @@ describe("PostTweetTool", () => {
 
   it("should have correct name and description", () => {
     expect(postTweetTool.name).toBe("post_tweet");
-    expect(postTweetTool.description).toBe("ツイート（ポスト）を投稿します");
+    expect(postTweetTool.description).toBe("Posts a tweet on behalf of the authenticated user.");
   });
 
   it.each([
@@ -74,7 +74,7 @@ describe("PostTweetTool", () => {
 
     const parsed = JSON.parse(result.content[0].text);
     expect(parsed.success).toBe(false);
-    expect(parsed.error).toContain("ツイートの投稿に失敗しました");
+    expect(parsed.error).toContain("Failed to post tweet");
     expect(parsed.error).toContain("API rate limit exceeded");
   });
 
@@ -87,7 +87,7 @@ describe("PostTweetTool", () => {
 
     const parsed = JSON.parse(result.content[0].text);
     expect(parsed.success).toBe(false);
-    expect(parsed.error).toContain("ツイートの投稿に失敗しました");
+    expect(parsed.error).toContain("Failed to post tweet");
     expect(parsed.error).toContain("Network connection failed");
   });
 });

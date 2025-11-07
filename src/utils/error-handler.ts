@@ -129,7 +129,7 @@ function createRateLimitErrorResponse(
 } {
   const rateLimitInfo = extractRateLimitInfo(error);
   const { message } = handleError(error);
-  const errorMessage = customMessage || "Twitter APIのレート制限に達しました";
+  const errorMessage = customMessage || "Twitter API rate limit reached";
 
   const responseData = {
     success: false,
@@ -146,8 +146,8 @@ function createRateLimitErrorResponse(
         },
         message:
           rateLimitInfo.resetInMinutes > 0
-            ? `${rateLimitInfo.resetInMinutes}分後に再試行してください`
-            : "まもなくリセットされます",
+            ? `Please retry in ${rateLimitInfo.resetInMinutes} minute(s).`
+            : "Rate limit resets momentarily",
       }),
     },
   };

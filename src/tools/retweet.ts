@@ -10,11 +10,11 @@ import { createErrorResponse } from "../utils/error-handler.js";
 export class RetweetTool implements IMCPTool {
   readonly name = "retweet";
 
-  readonly description = "ツイートをリツイートします";
+  readonly description = "Retweets a post on behalf of the authenticated user.";
 
   /** Parameter schema containing the tweet ID to retweet. */
   readonly parameters = {
-    tweet_id: z.string().describe("リツイートするツイートのID"),
+    tweet_id: z.string().describe("Tweet ID to retweet"),
   } as const;
 
   /**
@@ -45,7 +45,7 @@ export class RetweetTool implements IMCPTool {
             text: JSON.stringify(
               {
                 success: true,
-                message: `ツイート ${tweet_id} をリツイートしました`,
+                message: `Retweeted tweet ${tweet_id}.`,
               },
               null,
               2
@@ -54,7 +54,7 @@ export class RetweetTool implements IMCPTool {
         ],
       };
     } catch (error) {
-      return createErrorResponse(error, "リツイートに失敗しました");
+      return createErrorResponse(error, "Failed to retweet");
     }
   }
 }

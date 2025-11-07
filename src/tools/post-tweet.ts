@@ -10,11 +10,11 @@ import { createErrorResponse } from "../utils/error-handler.js";
 export class PostTweetTool implements IMCPTool {
   readonly name = "post_tweet";
 
-  readonly description = "ツイート（ポスト）を投稿します";
+  readonly description = "Posts a tweet on behalf of the authenticated user.";
 
   /** Zod schema describing the tweet body supplied by the MCP client. */
   readonly parameters = {
-    text: z.string().describe("投稿するツイートのテキスト（最大280文字）"),
+    text: z.string().describe("Tweet text to publish (max 280 characters)"),
   } as const;
 
   /**
@@ -54,7 +54,7 @@ export class PostTweetTool implements IMCPTool {
         ],
       };
     } catch (error) {
-      return createErrorResponse(error, "ツイートの投稿に失敗しました");
+      return createErrorResponse(error, "Failed to post tweet");
     }
   }
 }

@@ -10,11 +10,11 @@ import { createErrorResponse } from "../utils/error-handler.js";
 export class LikeTweetTool implements IMCPTool {
   readonly name = "like_tweet";
 
-  readonly description = "ツイートにいいねをします";
+  readonly description = "Likes a tweet on behalf of the authenticated user.";
 
   /** Parameter schema containing the tweet ID to like. */
   readonly parameters = {
-    tweet_id: z.string().describe("いいねするツイートのID"),
+    tweet_id: z.string().describe("Tweet ID to like"),
   } as const;
 
   /**
@@ -45,7 +45,7 @@ export class LikeTweetTool implements IMCPTool {
             text: JSON.stringify(
               {
                 success: true,
-                message: `ツイート ${tweet_id} にいいねしました`,
+                message: `Liked tweet ${tweet_id}.`,
               },
               null,
               2
@@ -54,7 +54,7 @@ export class LikeTweetTool implements IMCPTool {
         ],
       };
     } catch (error) {
-      return createErrorResponse(error, "いいねに失敗しました");
+      return createErrorResponse(error, "Failed to like tweet");
     }
   }
 }

@@ -10,12 +10,12 @@ import { createErrorResponse } from "../utils/error-handler.js";
 export class GetUserTweetsTool implements IMCPTool {
   readonly name = "get_user_tweets";
 
-  readonly description = "指定したユーザーの最新ツイートを取得します";
+  readonly description = "Retrieves recent tweets for a specific user.";
 
   /** Parameter schema capturing the username and optional result count. */
   readonly parameters = {
-    username: z.string().describe("ユーザー名（@なし）"),
-    count: z.number().optional().describe("取得するツイート数（デフォルト: 10, 最大: 100）"),
+    username: z.string().describe("Username (without @)"),
+    count: z.number().optional().describe("Number of tweets to fetch (default 10, max 100)"),
   } as const;
 
   /**
@@ -39,7 +39,7 @@ export class GetUserTweetsTool implements IMCPTool {
       const user = await rwClient.v2.userByUsername(username);
 
       if (!user.data) {
-        throw new Error(`ユーザー @${username} が見つかりません`);
+        throw new Error(`User @${username} was not found`);
       }
 
       const tweets = await rwClient.v2.userTimeline(user.data.id, {
@@ -69,7 +69,7 @@ export class GetUserTweetsTool implements IMCPTool {
         ],
       };
     } catch (error) {
-      return createErrorResponse(error, "ユーザーツイートの取得に失敗しました");
+      return createErrorResponse(error, "Failed to fetch user tweets");
     }
   }
 }
