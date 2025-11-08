@@ -17,6 +17,13 @@ export class PostTweetTool implements IMCPTool {
     text: z.string().describe("Tweet text to publish (max 280 characters)"),
   } as const;
 
+  /** Zod schema describing the structure of the tool's output. */
+  readonly outputSchema = {
+    success: z.boolean().describe("Whether the tweet was successfully posted"),
+    tweet_id: z.string().describe("The ID of the posted tweet"),
+    text: z.string().describe("The text content of the posted tweet"),
+  } as const;
+
   /**
    * @param client - Authenticated Twitter API client with read/write access.
    */
@@ -30,6 +37,7 @@ export class PostTweetTool implements IMCPTool {
    */
   async execute(args: InferZodParams<typeof this.parameters>): Promise<{
     content: TextContent[];
+    structuredContent?: Record<string, any>;
     isError?: boolean;
   }> {
     try {
@@ -37,21 +45,20 @@ export class PostTweetTool implements IMCPTool {
       const rwClient = this.client.readWrite;
       const tweet = await rwClient.v2.tweet(text);
 
+      const result = {
+        success: true,
+        tweet_id: tweet.data.id,
+        text: tweet.data.text,
+      };
+
       return {
         content: [
           {
             type: "text",
-            text: JSON.stringify(
-              {
-                success: true,
-                tweet_id: tweet.data.id,
-                text: tweet.data.text,
-              },
-              null,
-              2
-            ),
+            text: JSON.stringify(result, null, 2),
           },
         ],
+        structuredContent: result,
       };
     } catch (error) {
       return createErrorResponse(error, "Failed to post tweet");

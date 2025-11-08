@@ -6,14 +6,14 @@ import { registerTools } from "../src/tools/index.js";
 describe("registerTools", () => {
   let mockServer: McpServer;
   let mockTwitterClient: TwitterApi;
-  let mockToolFn: ReturnType<typeof vi.fn>;
+  let mockRegisterToolFn: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
-    mockToolFn = vi.fn();
+    mockRegisterToolFn = vi.fn();
 
-    // Create a mock MCP server
+    // Create a mock MCP server with registerTool method
     mockServer = {
-      tool: mockToolFn,
+      registerTool: mockRegisterToolFn,
     } as unknown as McpServer;
 
     // Create a mock Twitter API client
@@ -23,11 +23,11 @@ describe("registerTools", () => {
   it("should register all tools with the server", () => {
     registerTools(mockServer, mockTwitterClient);
 
-    // Verify that tool() was called 7 times (one for each tool)
-    expect(mockToolFn).toHaveBeenCalledTimes(7);
+    // Verify that registerTool() was called 7 times (one for each tool)
+    expect(mockRegisterToolFn).toHaveBeenCalledTimes(7);
 
     // Get all tool names that were registered
-    const registeredToolNames = mockToolFn.mock.calls.map((call) => call[0]);
+    const registeredToolNames = mockRegisterToolFn.mock.calls.map((call) => call[0]);
 
     // Verify all expected tools were registered
     expect(registeredToolNames).toContain("post_tweet");
@@ -52,11 +52,12 @@ describe("registerTools", () => {
   it.each(toolRegistrations)("should register $name tool with correct parameters", ({ name, description }) => {
     registerTools(mockServer, mockTwitterClient);
 
-    const toolCall = mockToolFn.mock.calls.find((call) => call[0] === name);
+    const toolCall = mockRegisterToolFn.mock.calls.find((call) => call[0] === name);
     expect(toolCall).toBeDefined();
     expect(toolCall?.[0]).toBe(name);
-    expect(toolCall?.[1]).toBe(description);
-    expect(toolCall?.[2]).toBeDefined(); // parameters
-    expect(toolCall?.[3]).toBeInstanceOf(Function); // execute function
+    expect(toolCall?.[1]).toHaveProperty("description", description);
+    expect(toolCall?.[1]).toHaveProperty("inputSchema"); // parameters
+    expect(toolCall?.[1]).toHaveProperty("outputSchema"); // output schema
+    expect(toolCall?.[2]).toBeInstanceOf(Function); // execute function
   });
 });

@@ -13,7 +13,10 @@ export type InferZodParams<T extends Record<string, z.ZodType>> = {
  * Common contract every MCP tool must follow so it can be registered on an
  * MCP server and invoked by clients.
  */
-export interface IMCPTool<TParams extends Record<string, z.ZodType> = Record<string, z.ZodType>> {
+export interface IMCPTool<
+  TParams extends Record<string, z.ZodType> = Record<string, z.ZodType>,
+  TOutput extends Record<string, z.ZodType> = Record<string, z.ZodType>
+> {
   /** Unique identifier exposed to MCP clients (e.g., `post_tweet`). */
   readonly name: string;
 
@@ -24,12 +27,19 @@ export interface IMCPTool<TParams extends Record<string, z.ZodType> = Record<str
   readonly parameters: TParams;
 
   /**
+   * Optional Zod schema describing the structure of the tool's output.
+   * When defined, the tool must return structuredContent in the result.
+   */
+  readonly outputSchema?: TOutput;
+
+  /**
    * Executes the tool logic using validated arguments from the MCP request.
    * @param args - Arguments validated by the Zod schema declared above.
-   * @returns MCP-friendly content payload (optionally marked as an error).
+   * @returns MCP-friendly content payload with optional structured content.
    */
   execute(args: InferZodParams<TParams>): Promise<{
     content: TextContent[];
+    structuredContent?: Record<string, any>;
     isError?: boolean;
   }>;
 }

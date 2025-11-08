@@ -18,6 +18,18 @@ export class SearchTweetsTool implements IMCPTool {
     count: z.number().optional().describe("Number of tweets to fetch (default 10, max 100)"),
   } as const;
 
+  /** Zod schema describing the structure of the tool's output. */
+  readonly outputSchema = {
+    success: z.boolean().describe("Whether the search was successful"),
+    query: z.string().describe("Search query that was executed"),
+    count: z.number().describe("Number of tweets found"),
+    tweets: z.array(z.object({
+      id: z.string().describe("Tweet ID"),
+      text: z.string().describe("Tweet text content"),
+      created_at: z.string().optional().describe("Tweet creation timestamp"),
+    })).describe("Array of matching tweets"),
+  } as const;
+
   /**
    * @param client - Authenticated Twitter API client with read/write scope.
    */
@@ -31,6 +43,7 @@ export class SearchTweetsTool implements IMCPTool {
    */
   async execute(args: InferZodParams<typeof this.parameters>): Promise<{
     content: TextContent[];
+    structuredContent?: Record<string, any>;
     isError?: boolean;
   }> {
     try {
@@ -40,27 +53,26 @@ export class SearchTweetsTool implements IMCPTool {
         max_results: Math.min(count, 100),
       });
 
+      const result = {
+        success: true,
+        query,
+        count: searchResults.data.data?.length || 0,
+        tweets:
+          searchResults.data.data?.map((t) => ({
+            id: t.id,
+            text: t.text,
+            created_at: t.created_at,
+          })) || [],
+      };
+
       return {
         content: [
           {
             type: "text",
-            text: JSON.stringify(
-              {
-                success: true,
-                query,
-                count: searchResults.data.data?.length || 0,
-                tweets:
-                  searchResults.data.data?.map((t) => ({
-                    id: t.id,
-                    text: t.text,
-                    created_at: t.created_at,
-                  })) || [],
-              },
-              null,
-              2
-            ),
+            text: JSON.stringify(result, null, 2),
           },
         ],
+        structuredContent: result,
       };
     } catch (error) {
       return createErrorResponse(error, "Failed to search tweets");
