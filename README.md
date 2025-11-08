@@ -24,7 +24,21 @@ This MCP server exposes the following tools:
 | `like_tweet` | Like a tweet by ID | Pro: 1,000 req/24 h (per user)<br>Basic: 200 req/24 h (per user)<br>Free: 1 req/15 min (per user) |
 | `retweet` | Retweet a tweet by ID | Pro: 50 req/15 min (per user)<br>Basic: 5 req/15 min (per user)<br>Free: 1 req/15 min (per user) |
 
-※ Rate limits reference [docs.x.com/x-api/fundamentals/rate-limits](https://docs.x.com/x-api/fundamentals/rate-limits) (retrieved on 7 Nov 2025) and may change as plans or API behavior evolve.
+**Monthly limits:**
+- **Read operations** (get_home_timeline, get_user_tweets, search_tweets, get_user_info): Pro: 1,000,000 posts/month · Basic: 15,000 posts/month · Free: 100 posts/month
+- **Write operations** (post_tweet, like_tweet, retweet): Pro: 300,000 posts/month · Basic: 50,000 posts/month · Free: 500 posts/month
+
+※ Rate limits reference [docs.x.com/x-api/fundamentals/rate-limits](https://docs.x.com/x-api/fundamentals/rate-limits) and [X API pricing](https://developer.x.com/en/portal/products) (retrieved on 8 Nov 2025) and may change as plans or API behavior evolve.
+
+## ⚠️ Important Notice
+
+**X API specifications are subject to change.** This server implementation is based on the X API v2 as documented at the time of development. Please refer to the [official X API documentation](https://docs.x.com/x-api/introduction) for the most up-to-date API specifications, rate limits, and available endpoints.
+
+Changes to the X API may affect:
+- Available endpoints and their parameters
+- Rate limits and pricing tiers
+- Authentication requirements
+- Response formats
 
 ## Setup
 
