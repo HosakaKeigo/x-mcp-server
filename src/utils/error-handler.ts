@@ -97,9 +97,6 @@ function generateErrorId(): string {
  */
 function logErrorDetails(error: unknown, errorId: string): void {
   console.error(`[Error ${errorId}]`, error);
-  if (error instanceof Error && error.stack) {
-    console.error(`[Stack ${errorId}]`, error.stack);
-  }
 }
 
 /**
