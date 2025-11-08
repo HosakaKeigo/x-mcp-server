@@ -4,6 +4,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { TwitterApi } from "twitter-api-v2";
 import { registerTools } from "./tools/index.js";
+import { env } from "./env.js";
 
 /**
  * Bootstraps the X (Twitter) MCP server, registers all tools, and connects it
@@ -15,10 +16,10 @@ async function main() {
 
   try {
     const twitterClient = new TwitterApi({
-      appKey: process.env.X_API_KEY || "",
-      appSecret: process.env.X_API_SECRET || "",
-      accessToken: process.env.X_ACCESS_TOKEN || "",
-      accessSecret: process.env.X_ACCESS_TOKEN_SECRET || "",
+      appKey: env.X_API_KEY || "",
+      appSecret: env.X_API_SECRET || "",
+      accessToken: env.X_ACCESS_TOKEN || "",
+      accessSecret: env.X_ACCESS_TOKEN_SECRET || "",
     });
 
     const server = new McpServer({
