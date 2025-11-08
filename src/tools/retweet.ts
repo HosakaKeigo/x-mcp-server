@@ -12,6 +12,8 @@ export class RetweetTool implements IMCPTool {
 
   readonly description = "Retweets a post on behalf of the authenticated user.";
 
+  readonly dangerous = true;
+
   /** Parameter schema containing the tweet ID to retweet. */
   readonly parameters = {
     tweet_id: z.string().describe("Tweet ID to retweet"),
