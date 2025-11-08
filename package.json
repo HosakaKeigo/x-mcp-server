@@ -8,7 +8,6 @@
   },
   "scripts": {
     "build": "tsc",
-    "prepare": "pnpm run build",
     "dev": "tsx src/index.ts",
     "watch": "tsc --watch",
     "check": "biome check .",

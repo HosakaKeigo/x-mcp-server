@@ -4,10 +4,14 @@
   "version": "0.1.0",
   "description": "MCP server for X (formerly Twitter) API integration",
   "author": {
-    "name": "Hosaka Keigo",
-    "email": "hosaka@piano.or.jp"
+    "name": "Hosaka Keigo"
   },
-  "keywords": ["mcp", "twitter", "x", "api"],
+  "keywords": [
+    "mcp",
+    "twitter",
+    "x",
+    "api"
+  ],
   "user_config": {
     "x_api_key": {
       "type": "string",
@@ -43,7 +47,9 @@
     "entry_point": "dist/index.js",
     "mcp_config": {
       "command": "node",
-      "args": ["${__dirname}/dist/index.js"],
+      "args": [
+        "${__dirname}/dist/index.js"
+      ],
       "env": {
         "X_API_KEY": "${user_config.x_api_key}",
         "X_API_SECRET": "${user_config.x_api_secret}",
