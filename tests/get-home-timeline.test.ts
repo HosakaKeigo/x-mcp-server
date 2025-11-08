@@ -25,7 +25,9 @@ describe("GetHomeTimelineTool", () => {
 
   it("should have correct name and description", () => {
     expect(getHomeTimelineTool.name).toBe("get_home_timeline");
-    expect(getHomeTimelineTool.description).toBe("Retrieves the authenticated user's home timeline.");
+    expect(getHomeTimelineTool.description).toBe(
+      "Retrieves the authenticated user's home timeline."
+    );
   });
 
   it("should successfully fetch home timeline with default count", async () => {

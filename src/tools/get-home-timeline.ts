@@ -21,11 +21,15 @@ export class GetHomeTimelineTool implements IMCPTool {
   readonly outputSchema = {
     success: z.boolean().describe("Whether the timeline was successfully fetched"),
     count: z.number().describe("Number of tweets returned"),
-    tweets: z.array(z.object({
-      id: z.string().describe("Tweet ID"),
-      text: z.string().describe("Tweet text content"),
-      created_at: z.string().optional().describe("Tweet creation timestamp"),
-    })).describe("Array of timeline tweets"),
+    tweets: z
+      .array(
+        z.object({
+          id: z.string().describe("Tweet ID"),
+          text: z.string().describe("Tweet text content"),
+          created_at: z.string().optional().describe("Tweet creation timestamp"),
+        })
+      )
+      .describe("Array of timeline tweets"),
   } as const;
 
   /**

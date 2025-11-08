@@ -7,12 +7,7 @@
     "name": "Hosaka Keigo",
     "email": "hosaka@piano.or.jp"
   },
-  "keywords": [
-    "mcp",
-    "twitter",
-    "x",
-    "api"
-  ],
+  "keywords": ["mcp", "twitter", "x", "api"],
   "user_config": {
     "x_api_key": {
       "type": "string",

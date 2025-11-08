@@ -15,7 +15,7 @@ export type InferZodParams<T extends Record<string, z.ZodType>> = {
  */
 export interface IMCPTool<
   TParams extends Record<string, z.ZodType> = Record<string, z.ZodType>,
-  TOutput extends Record<string, z.ZodType> = Record<string, z.ZodType>
+  TOutput extends Record<string, z.ZodType> = Record<string, z.ZodType>,
 > {
   /** Unique identifier exposed to MCP clients (e.g., `post_tweet`). */
   readonly name: string;

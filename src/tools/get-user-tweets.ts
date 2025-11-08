@@ -23,11 +23,15 @@ export class GetUserTweetsTool implements IMCPTool {
     success: z.boolean().describe("Whether the user tweets were successfully fetched"),
     username: z.string().describe("Username that was queried"),
     count: z.number().describe("Number of tweets returned"),
-    tweets: z.array(z.object({
-      id: z.string().describe("Tweet ID"),
-      text: z.string().describe("Tweet text content"),
-      created_at: z.string().optional().describe("Tweet creation timestamp"),
-    })).describe("Array of user tweets"),
+    tweets: z
+      .array(
+        z.object({
+          id: z.string().describe("Tweet ID"),
+          text: z.string().describe("Tweet text content"),
+          created_at: z.string().optional().describe("Tweet creation timestamp"),
+        })
+      )
+      .describe("Array of user tweets"),
   } as const;
 
   /**
