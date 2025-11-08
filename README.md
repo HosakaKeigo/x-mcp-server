@@ -93,27 +93,36 @@ npm run build
 Pre-built packages are available from the [Releases](https://github.com/HosakaKeigo/x-mcp-server/releases) page. You can download the `.mcpb` file and install it directly in Claude Desktop.
 
 1. Download the latest `.mcpb` file from [Releases](https://github.com/HosakaKeigo/x-mcp-server/releases)
-2. In Claude Desktop, go to Settings → Developer → MCP Servers
-3. Click "Install from file" and select the downloaded `.mcpb` file
-4. Configure your X API credentials in the server settings
+2. In Claude Desktop, go to **Settings → Extensions**
+3. Install the extension by one of these methods:
+   - Double-click the downloaded `.mcpb` file, or
+   - Drag and drop the file into Claude Desktop, or
+   - Click "Install from file" in the Extensions settings
+4. Configure your X API credentials in the extension settings:
+   - `X_API_KEY`: Your API Key (Consumer Key)
+   - `X_API_SECRET`: Your API Secret (Consumer Secret)
+   - `X_ACCESS_TOKEN`: Your Access Token
+   - `X_ACCESS_TOKEN_SECRET`: Your Access Token Secret
 
 **If you encounter errors:**
-- Verify that your API keys are correct
-- Disable Claude Desktop's built-in Node.js by adding `"disableBuiltInNode": true` to your MCP server configuration
+- Verify that your API keys are correct (no extra spaces or quotes)
+- Restart Claude Desktop completely
+- Check the logs at:
+  - **macOS:** `~/Library/Logs/Claude/mcp*.log`
+  - **Windows:** `%APPDATA%\Claude\logs\mcp*.log`
 
 ### Manual Setup
 
 #### 1. Open the Claude Desktop config file
 
-**macOS:**
-```
-~/Library/Application Support/Claude/claude_desktop_config.json
-```
+You can access the config file either through Claude Desktop settings or directly:
 
-**Windows:**
-```
-%APPDATA%\Claude\claude_desktop_config.json
-```
+**Via Claude Desktop:**
+- Go to **Settings → Developers → Edit Config**
+
+**Direct file paths:**
+- **macOS:** `~/Library/Application Support/Claude/claude_desktop_config.json`
+- **Windows:** `%APPDATA%\Claude\claude_desktop_config.json`
 
 #### 2. Add the MCP server entry
 
@@ -200,10 +209,16 @@ If you encounter errors when using the DXT/mcpb package:
 1. **Verify API keys are correct**
    - Double-check all four credentials (API Key, API Secret, Access Token, Access Token Secret)
    - Ensure there are no extra spaces or quotes in the configuration
+   - Verify the keys are valid in the [X Developer Portal](https://developer.x.com/en/portal/dashboard)
 
-2. **Disable built-in Node.js**
-   - Add `"disableBuiltInNode": true` to the server configuration in Claude Desktop
-   - This prevents conflicts with Claude Desktop's built-in Node.js runtime
+2. **Restart Claude Desktop**
+   - Completely quit and restart Claude Desktop
+   - **macOS:** Choose "Quit Claude" from the menu
+   - **Windows:** Terminate Claude Desktop from Task Manager
+
+3. **Check logs for detailed errors**
+   - **macOS:** `~/Library/Logs/Claude/mcp*.log`
+   - **Windows:** `%APPDATA%\Claude\logs\mcp*.log`
 
 ### Claude Desktop does not detect the server
 
