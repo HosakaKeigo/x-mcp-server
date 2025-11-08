@@ -124,7 +124,7 @@ export function handleError(error: unknown): {
     if (typeof errorObj.message === "string") {
       message = errorObj.message;
     }
-  } else {
+  } else if (typeof error !== "object" || error === null) {
     message = String(error);
   }
 
