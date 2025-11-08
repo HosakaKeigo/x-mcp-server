@@ -221,7 +221,3 @@ npm run dev
 ## License
 
 MIT
-
-## Author
-
-Hosaka Keigo <hosaka@piano.or.jp>
