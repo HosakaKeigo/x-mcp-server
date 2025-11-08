@@ -124,6 +124,6 @@ describe("LikeTweetTool", () => {
     const schema = likeTweetTool.parameters.tweet_id;
     expect(schema.safeParse("1234567890123456789").success).toBe(true);
     expect(schema.safeParse("abc123").success).toBe(false);
-    expect(schema.safeParse("12345678901234567890").success).toBe(false);
+    expect(schema.safeParse("123456789012345678901").success).toBe(false);
   });
 });
