@@ -14,7 +14,10 @@ export class GetUserInfoTool implements IMCPTool {
 
   /** Parameter schema containing the username to resolve. */
   readonly parameters = {
-    username: z.string().regex(/^[A-Za-z0-9_]{1,15}$/, "Username must be 1-15 characters (letters, numbers, underscore only)").describe("Username (without @)"),
+    // Twitter usernames must be 1-15 characters, letters, numbers, underscores, and cannot be all numbers.
+    username: z.string()
+      .regex(/^(?!\d+$)[A-Za-z0-9_]{1,15}$/, "Username must be 1-15 characters (letters, numbers, underscore only), and cannot be all numbers")
+      .describe("Username (without @)"),
   } as const;
 
   /** Zod schema describing the structure of the tool's output. */
