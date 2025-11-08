@@ -2,6 +2,8 @@ name: Build and Release MCPB
 on:
   push:
     tags: ["v*"]
+permissions:
+  contents: write
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -16,8 +18,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'pnpm'
+          node-version: "20"
+          cache: "pnpm"
 
       - name: Install dependencies
         run: pnpm install
@@ -31,6 +33,6 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          files: '*.mcpb'
+          files: "*.mcpb"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
