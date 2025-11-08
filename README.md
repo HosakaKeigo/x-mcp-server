@@ -88,7 +88,22 @@ npm run build
 
 ## Using with Claude Desktop
 
-### 1. Open the Claude Desktop config file
+### Quick Install (DXT/mcpb)
+
+Pre-built packages are available from the [Releases](https://github.com/HosakaKeigo/x-mcp-server/releases) page. You can download the `.mcpb` file and install it directly in Claude Desktop.
+
+1. Download the latest `.mcpb` file from [Releases](https://github.com/HosakaKeigo/x-mcp-server/releases)
+2. In Claude Desktop, go to Settings → Developer → MCP Servers
+3. Click "Install from file" and select the downloaded `.mcpb` file
+4. Configure your X API credentials in the server settings
+
+**If you encounter errors:**
+- Verify that your API keys are correct
+- Disable Claude Desktop's built-in Node.js by adding `"disableBuiltInNode": true` to your MCP server configuration
+
+### Manual Setup
+
+#### 1. Open the Claude Desktop config file
 
 **macOS:**
 ```
@@ -100,7 +115,7 @@ npm run build
 %APPDATA%\Claude\claude_desktop_config.json
 ```
 
-### 2. Add the MCP server entry
+#### 2. Add the MCP server entry
 
 Append the following configuration (adjust paths as needed):
 
@@ -140,7 +155,7 @@ Append the following configuration (adjust paths as needed):
 }
 ```
 
-### 3. Restart Claude Desktop
+#### 3. Restart Claude Desktop
 
 Restart Claude Desktop completely so the settings take effect.
 
@@ -152,7 +167,7 @@ Restart Claude Desktop completely so the settings take effect.
 - Terminate Claude Desktop from Task Manager
 - Launch Claude Desktop again
 
-### 4. Verify the connection
+#### 4. Verify the connection
 
 After restarting, confirm that the tool icon (🔨) shows up in the bottom-left corner of the Claude input box.
 
@@ -177,6 +192,18 @@ Ask Claude Desktop things like:
 ```
 
 ## Troubleshooting
+
+### DXT/mcpb installation errors
+
+If you encounter errors when using the DXT/mcpb package:
+
+1. **Verify API keys are correct**
+   - Double-check all four credentials (API Key, API Secret, Access Token, Access Token Secret)
+   - Ensure there are no extra spaces or quotes in the configuration
+
+2. **Disable built-in Node.js**
+   - Add `"disableBuiltInNode": true` to the server configuration in Claude Desktop
+   - This prevents conflicts with Claude Desktop's built-in Node.js runtime
 
 ### Claude Desktop does not detect the server
 
