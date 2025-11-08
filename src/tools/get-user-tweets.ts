@@ -14,8 +14,8 @@ export class GetUserTweetsTool implements IMCPTool {
 
   /** Parameter schema capturing the username and optional result count. */
   readonly parameters = {
-    username: z.string().describe("Username (without @)"),
-    count: z.number().optional().describe("Number of tweets to fetch (default 10, max 100)"),
+    username: z.string().regex(/^[A-Za-z0-9_]{1,15}$/, "Username must be 1-15 characters (letters, numbers, underscore only)").describe("Username (without @)"),
+    count: z.number().int().min(1).max(100).optional().describe("Number of tweets to fetch (default 10, max 100)"),
   } as const;
 
   /** Zod schema describing the structure of the tool's output. */

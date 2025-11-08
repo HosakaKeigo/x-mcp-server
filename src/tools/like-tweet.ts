@@ -12,6 +12,8 @@ export class LikeTweetTool implements IMCPTool {
 
   readonly description = "Likes a tweet on behalf of the authenticated user.";
 
+  readonly dangerous = true;
+
   /** Parameter schema containing the tweet ID to like. */
   readonly parameters = {
     tweet_id: z.string().describe("Tweet ID to like"),

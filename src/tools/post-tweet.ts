@@ -12,9 +12,11 @@ export class PostTweetTool implements IMCPTool {
 
   readonly description = "Posts a tweet on behalf of the authenticated user.";
 
+  readonly dangerous = true;
+
   /** Zod schema describing the tweet body supplied by the MCP client. */
   readonly parameters = {
-    text: z.string().describe("Tweet text to publish (max 280 characters)"),
+    text: z.string().trim().min(1, "Tweet text cannot be empty").max(280, "Tweet text cannot exceed 280 characters").describe("Tweet text to publish (1-280 characters)"),
   } as const;
 
   /** Zod schema describing the structure of the tool's output. */

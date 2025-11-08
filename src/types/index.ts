@@ -33,6 +33,13 @@ export interface IMCPTool<
   readonly outputSchema?: TOutput;
 
   /**
+   * Optional flag indicating whether this tool has side effects that modify
+   * external state. When true, MCP clients should request user confirmation
+   * before executing the tool.
+   */
+  readonly dangerous?: boolean;
+
+  /**
    * Executes the tool logic using validated arguments from the MCP request.
    * @param args - Arguments validated by the Zod schema declared above.
    * @returns MCP-friendly content payload with optional structured content.

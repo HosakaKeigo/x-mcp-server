@@ -33,6 +33,7 @@ export function registerTools(server: McpServer, twitterClient: TwitterApi): voi
         description: tool.description,
         inputSchema: tool.parameters,
         outputSchema: tool.outputSchema,
+        annotations: tool.dangerous ? { dangerous: true } : undefined,
       },
       tool.execute.bind(tool)
     );

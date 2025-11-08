@@ -1,4 +1,5 @@
 import type { TextContent } from "@modelcontextprotocol/sdk/types.js";
+import crypto from "node:crypto";
 
 /**
  * Normalized representation of the rate-limit metadata returned by the
@@ -82,34 +83,51 @@ export function extractRateLimitInfo(error: unknown): RateLimitInfo | undefined 
 }
 
 /**
- * Converts unknown errors into a normalized message/stack pair so that MCP
- * responses remain predictable.
+ * Generates a unique error trace ID for correlation between logs and responses.
+ * @returns 8-character hexadecimal error ID.
+ */
+function generateErrorId(): string {
+  return crypto.randomBytes(4).toString("hex");
+}
+
+/**
+ * Logs error details internally without exposing them to the client.
  * @param error - Any thrown error value.
- * @returns Plain object describing the message and optional stack trace.
+ * @param errorId - Unique identifier for this error instance.
+ */
+function logErrorDetails(error: unknown, errorId: string): void {
+  console.error(`[Error ${errorId}]`, error);
+}
+
+/**
+ * Converts unknown errors into a sanitized message that is safe to return
+ * to MCP clients without leaking internal implementation details.
+ * @param error - Any thrown error value.
+ * @returns Plain object with sanitized message and error ID for correlation.
  */
 export function handleError(error: unknown): {
   message: string;
-  stack?: string;
+  errorId: string;
 } {
-  if (error instanceof Error) {
-    return {
-      message: error.message,
-      stack: error.stack,
-    };
-  }
+  const errorId = generateErrorId();
+  logErrorDetails(error, errorId);
 
-  // Prefer a message field when the thrown value is an arbitrary object.
-  if (typeof error === "object" && error !== null && "message" in error) {
+  let message = "An unexpected error occurred";
+
+  if (error instanceof Error) {
+    message = error.message;
+  } else if (typeof error === "object" && error !== null && "message" in error) {
     const errorObj = error as { message: unknown };
     if (typeof errorObj.message === "string") {
-      return {
-        message: errorObj.message,
-      };
+      message = errorObj.message;
     }
+  } else if (typeof error !== "object" || error === null) {
+    message = String(error);
   }
 
   return {
-    message: String(error),
+    message,
+    errorId,
   };
 }
 
@@ -128,13 +146,14 @@ function createRateLimitErrorResponse(
   isError: boolean;
 } {
   const rateLimitInfo = extractRateLimitInfo(error);
-  const { message } = handleError(error);
+  const { message, errorId } = handleError(error);
   const errorMessage = customMessage || "Twitter API rate limit reached";
 
   const responseData = {
     success: false,
     error_type: "RATE_LIMIT_EXCEEDED" as const,
     error: errorMessage,
+    error_id: errorId,
     details: {
       original_error: message,
       ...(rateLimitInfo && {
@@ -181,7 +200,7 @@ export function createErrorResponse(
     return createRateLimitErrorResponse(error, customMessage);
   }
 
-  const { message, stack } = handleError(error);
+  const { message, errorId } = handleError(error);
   const errorMessage = customMessage ? `${customMessage}: ${message}` : message;
 
   return {
@@ -192,7 +211,7 @@ export function createErrorResponse(
           {
             success: false,
             error: errorMessage,
-            ...(stack && { stack }),
+            error_id: errorId,
           },
           null,
           2
