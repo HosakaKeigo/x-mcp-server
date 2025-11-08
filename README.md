@@ -6,7 +6,7 @@ This is a Model Context Protocol (MCP) server for the X (formerly Twitter) API. 
 
 This MCP server exposes the following tools:
 
-- **post_tweet**: Post (publish) a tweet
+- **post_tweet**: Post (publish) a tweet with optional image or video attachment
 - **get_home_timeline**: Fetch the authenticated user's home timeline
 - **get_user_tweets**: Fetch the latest tweets for a specific user
 - **search_tweets**: Search tweets by keyword
@@ -16,7 +16,7 @@ This MCP server exposes the following tools:
 
 | Tool | Description | Key rate limits (Pro / Basic / Free) |
 | --- | --- | --- |
-| `post_tweet` | Create a new tweet with arbitrary text | Pro: 100 req/15 min (per user) · 10,000 req/24 h (per app)<br>Basic: 100 req/24 h (per user) · 1,667 req/24 h (per app)<br>Free: 17 req/24 h (per user/app) |
+| `post_tweet` | Create a new tweet with text and optional image (max 5MB: PNG, JPEG, GIF, WEBP) or video (max 512MB: MP4, MOV, AVI, WEBM, M4V) | Pro: 100 req/15 min (per user) · 10,000 req/24 h (per app)<br>Basic: 100 req/24 h (per user) · 1,667 req/24 h (per app)<br>Free: 17 req/24 h (per user/app) |
 | `get_home_timeline` | Retrieve a configurable number of posts from the authenticated home timeline | Pro: 180 req/15 min (per user)<br>Basic: 5 req/15 min (per user)<br>Free: 1 req/15 min (per user) |
 | `get_user_tweets` | Retrieve the latest tweets for a given username (without @) | Pro: 900 req/15 min (per user) · 1,500 req/15 min (per app)<br>Basic: 5 req/15 min (per user) · 10 req/15 min (per app)<br>Free: 1 req/15 min (per user/app) |
 | `search_tweets` | Search recent tweets by keyword | Pro: 300 req/15 min (per user) · 450 req/15 min (per app)<br>Basic: 60 req/15 min (per user/app)<br>Free: 1 req/15 min (per user/app) |
@@ -170,6 +170,10 @@ Ask Claude Desktop things like:
 "Show me the profile for @example_user."
 
 "Post the tweet 'Hello, this is an MCP server test!'"
+
+"Post a tweet with the text 'Check out this image!' and attach the image at /path/to/image.png"
+
+"Post a tweet with the text 'My new video!' and attach the video at /path/to/video.mp4"
 ```
 
 ## Troubleshooting
