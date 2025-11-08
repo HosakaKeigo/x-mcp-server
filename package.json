@@ -29,6 +29,7 @@
   "license": "MIT",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.21.0",
+    "@t3-oss/env-core": "^0.13.8",
     "twitter-api-v2": "^1.27.0",
     "zod": "^3"
   },

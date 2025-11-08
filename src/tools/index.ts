@@ -27,10 +27,14 @@ export function registerTools(server: McpServer, twitterClient: TwitterApi): voi
   ];
 
   for (const tool of ALL_TOOLS) {
-    server.registerTool(tool.name, {
-      description: tool.description,
-      inputSchema: tool.parameters,
-      outputSchema: tool.outputSchema,
-    }, tool.execute.bind(tool));
+    server.registerTool(
+      tool.name,
+      {
+        description: tool.description,
+        inputSchema: tool.parameters,
+        outputSchema: tool.outputSchema,
+      },
+      tool.execute.bind(tool)
+    );
   }
 }

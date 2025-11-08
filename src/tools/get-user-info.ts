@@ -20,21 +20,26 @@ export class GetUserInfoTool implements IMCPTool {
   /** Zod schema describing the structure of the tool's output. */
   readonly outputSchema = {
     success: z.boolean().describe("Whether the user info was successfully fetched"),
-    user: z.object({
-      id: z.string().describe("User ID"),
-      username: z.string().describe("Username"),
-      name: z.string().describe("Display name"),
-      description: z.string().optional().describe("User bio/description"),
-      created_at: z.string().optional().describe("Account creation timestamp"),
-      verified: z.boolean().optional().describe("Verification status"),
-      location: z.string().optional().describe("User location"),
-      metrics: z.object({
-        followers_count: z.number().describe("Number of followers"),
-        following_count: z.number().describe("Number of accounts following"),
-        tweet_count: z.number().describe("Total number of tweets"),
-        listed_count: z.number().describe("Number of lists the user is a member of"),
-      }).optional().describe("Public metrics for the user"),
-    }).describe("User profile information"),
+    user: z
+      .object({
+        id: z.string().describe("User ID"),
+        username: z.string().describe("Username"),
+        name: z.string().describe("Display name"),
+        description: z.string().optional().describe("User bio/description"),
+        created_at: z.string().optional().describe("Account creation timestamp"),
+        verified: z.boolean().optional().describe("Verification status"),
+        location: z.string().optional().describe("User location"),
+        metrics: z
+          .object({
+            followers_count: z.number().describe("Number of followers"),
+            following_count: z.number().describe("Number of accounts following"),
+            tweet_count: z.number().describe("Total number of tweets"),
+            listed_count: z.number().describe("Number of lists the user is a member of"),
+          })
+          .optional()
+          .describe("Public metrics for the user"),
+      })
+      .describe("User profile information"),
   } as const;
 
   /**

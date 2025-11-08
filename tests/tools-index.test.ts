@@ -49,15 +49,18 @@ describe("registerTools", () => {
     { name: "retweet", description: "Retweets a post on behalf of the authenticated user." },
   ];
 
-  it.each(toolRegistrations)("should register $name tool with correct parameters", ({ name, description }) => {
-    registerTools(mockServer, mockTwitterClient);
+  it.each(toolRegistrations)(
+    "should register $name tool with correct parameters",
+    ({ name, description }) => {
+      registerTools(mockServer, mockTwitterClient);
 
-    const toolCall = mockRegisterToolFn.mock.calls.find((call) => call[0] === name);
-    expect(toolCall).toBeDefined();
-    expect(toolCall?.[0]).toBe(name);
-    expect(toolCall?.[1]).toHaveProperty("description", description);
-    expect(toolCall?.[1]).toHaveProperty("inputSchema"); // parameters
-    expect(toolCall?.[1]).toHaveProperty("outputSchema"); // output schema
-    expect(toolCall?.[2]).toBeInstanceOf(Function); // execute function
-  });
+      const toolCall = mockRegisterToolFn.mock.calls.find((call) => call[0] === name);
+      expect(toolCall).toBeDefined();
+      expect(toolCall?.[0]).toBe(name);
+      expect(toolCall?.[1]).toHaveProperty("description", description);
+      expect(toolCall?.[1]).toHaveProperty("inputSchema"); // parameters
+      expect(toolCall?.[1]).toHaveProperty("outputSchema"); // output schema
+      expect(toolCall?.[2]).toBeInstanceOf(Function); // execute function
+    }
+  );
 });

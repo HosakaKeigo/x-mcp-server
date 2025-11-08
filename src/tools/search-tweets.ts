@@ -23,11 +23,15 @@ export class SearchTweetsTool implements IMCPTool {
     success: z.boolean().describe("Whether the search was successful"),
     query: z.string().describe("Search query that was executed"),
     count: z.number().describe("Number of tweets found"),
-    tweets: z.array(z.object({
-      id: z.string().describe("Tweet ID"),
-      text: z.string().describe("Tweet text content"),
-      created_at: z.string().optional().describe("Tweet creation timestamp"),
-    })).describe("Array of matching tweets"),
+    tweets: z
+      .array(
+        z.object({
+          id: z.string().describe("Tweet ID"),
+          text: z.string().describe("Tweet text content"),
+          created_at: z.string().optional().describe("Tweet creation timestamp"),
+        })
+      )
+      .describe("Array of matching tweets"),
   } as const;
 
   /**

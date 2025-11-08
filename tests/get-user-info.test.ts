@@ -25,7 +25,9 @@ describe("GetUserInfoTool", () => {
 
   it("should have correct name and description", () => {
     expect(getUserInfoTool.name).toBe("get_user_info");
-    expect(getUserInfoTool.description).toBe("Retrieves basic profile information for a given user.");
+    expect(getUserInfoTool.description).toBe(
+      "Retrieves basic profile information for a given user."
+    );
   });
 
   it("should successfully fetch user info", async () => {
