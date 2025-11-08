@@ -7,49 +7,52 @@ import {
 } from "../src/utils/error-handler.js";
 
 describe("handleError", () => {
-  it("should return error message and stack when given an Error instance", () => {
+  const expectTrace = (result: ReturnType<typeof handleError>) => {
+    expect(result.errorId).toMatch(/^[a-f0-9]{8}$/);
+  };
+
+  it("should return error message and trace id when given an Error instance", () => {
     const error = new Error("Test error message");
     const result = handleError(error);
 
     expect(result.message).toBe("Test error message");
-    expect(result.stack).toBeDefined();
-    expect(result.stack).toContain("Test error message");
+    expectTrace(result);
   });
 
-  it("should return string representation when given a non-Error object", () => {
+  it("should return string representation when given a non-Error string", () => {
     const result = handleError("Simple string error");
 
     expect(result.message).toBe("Simple string error");
-    expect(result.stack).toBeUndefined();
+    expectTrace(result);
   });
 
   it("should convert number to string when given a number", () => {
     const result = handleError(404);
 
     expect(result.message).toBe("404");
-    expect(result.stack).toBeUndefined();
+    expectTrace(result);
   });
 
   it("should handle null value", () => {
     const result = handleError(null);
 
     expect(result.message).toBe("null");
-    expect(result.stack).toBeUndefined();
+    expectTrace(result);
   });
 
   it("should handle undefined value", () => {
     const result = handleError(undefined);
 
     expect(result.message).toBe("undefined");
-    expect(result.stack).toBeUndefined();
+    expectTrace(result);
   });
 
-  it("should convert object to string", () => {
+  it("should sanitize object without message field", () => {
     const error = { code: "ERR_001", detail: "Something went wrong" };
     const result = handleError(error);
 
-    expect(result.message).toBe("[object Object]");
-    expect(result.stack).toBeUndefined();
+    expect(result.message).toBe("An unexpected error occurred");
+    expectTrace(result);
   });
 
   it("should extract message from object with message field", () => {
@@ -57,23 +60,23 @@ describe("handleError", () => {
     const result = handleError(error);
 
     expect(result.message).toBe("Custom error message");
-    expect(result.stack).toBeUndefined();
+    expectTrace(result);
   });
 
-  it("should handle object with non-string message field", () => {
+  it("should sanitize object with non-string message field", () => {
     const error = { message: 42, code: 500 };
     const result = handleError(error);
 
-    expect(result.message).toBe("[object Object]");
-    expect(result.stack).toBeUndefined();
+    expect(result.message).toBe("An unexpected error occurred");
+    expectTrace(result);
   });
 
-  it("should handle object with null message field", () => {
+  it("should sanitize object with null message field", () => {
     const error = { message: null, code: 500 };
     const result = handleError(error);
 
-    expect(result.message).toBe("[object Object]");
-    expect(result.stack).toBeUndefined();
+    expect(result.message).toBe("An unexpected error occurred");
+    expectTrace(result);
   });
 });
 
@@ -89,7 +92,7 @@ describe("createErrorResponse", () => {
     const parsed = JSON.parse(response.content[0].text);
     expect(parsed.success).toBe(false);
     expect(parsed.error).toBe("Test error");
-    expect(parsed.stack).toBeDefined();
+    expect(parsed.error_id).toMatch(/^[a-f0-9]{8}$/);
   });
 
   it("should create error response with custom message", () => {
@@ -106,7 +109,7 @@ describe("createErrorResponse", () => {
     const parsed = JSON.parse(response.content[0].text);
     expect(parsed.success).toBe(false);
     expect(parsed.error).toBe("Simple error message");
-    expect(parsed.stack).toBeUndefined();
+    expect(parsed.error_id).toMatch(/^[a-f0-9]{8}$/);
   });
 
   it("should format response as valid JSON", () => {

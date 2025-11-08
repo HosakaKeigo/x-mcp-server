@@ -38,8 +38,8 @@ describe("RetweetTool", () => {
       userId: "9876543210",
     },
     {
-      description: "alphanumeric tweet ID",
-      tweetId: "1234567890abcdef",
+      description: "long numeric tweet ID",
+      tweetId: "987654321012345678",
       userId: "0fedcba0987654321",
     },
   ])("should successfully retweet a tweet with $description", async ({ tweetId, userId }) => {
@@ -124,5 +124,12 @@ describe("RetweetTool", () => {
     expect(parsed.success).toBe(false);
     expect(parsed.error).toContain("Failed to retweet");
     expect(parsed.error).toContain("Network connection failed");
+  });
+
+  it("should validate tweet_id schema", () => {
+    const schema = retweetTool.parameters.tweet_id;
+    expect(schema.safeParse("1234567890").success).toBe(true);
+    expect(schema.safeParse("tweet123").success).toBe(false);
+    expect(schema.safeParse("123456789012345678901").success).toBe(false);
   });
 });

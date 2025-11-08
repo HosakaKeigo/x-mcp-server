@@ -38,8 +38,8 @@ describe("LikeTweetTool", () => {
       userId: "9876543210",
     },
     {
-      description: "alphanumeric tweet ID",
-      tweetId: "1234567890abcdef",
+      description: "long numeric tweet ID",
+      tweetId: "1234567890123456789",
       userId: "0fedcba0987654321",
     },
   ])("should successfully like a tweet with $description", async ({ tweetId, userId }) => {
@@ -118,5 +118,12 @@ describe("LikeTweetTool", () => {
     expect(parsed.success).toBe(false);
     expect(parsed.error).toContain("Failed to like tweet");
     expect(parsed.error).toContain("Network connection failed");
+  });
+
+  it("should validate tweet_id schema", () => {
+    const schema = likeTweetTool.parameters.tweet_id;
+    expect(schema.safeParse("1234567890123456789").success).toBe(true);
+    expect(schema.safeParse("abc123").success).toBe(false);
+    expect(schema.safeParse("12345678901234567890").success).toBe(false);
   });
 });

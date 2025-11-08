@@ -16,7 +16,10 @@ export class RetweetTool implements IMCPTool {
 
   /** Parameter schema containing the tweet ID to retweet. */
   readonly parameters = {
-    tweet_id: z.string().describe("Tweet ID to retweet"),
+    tweet_id: z
+      .string()
+      .regex(/^\d{1,20}$/, "Tweet ID must be a numeric string up to 20 digits")
+      .describe("Tweet ID to retweet"),
   } as const;
 
   /** Zod schema describing the structure of the tool's output. */
